@@ -1,0 +1,259 @@
+[2026-06-17 23:27:00] [INFO] [pipeline_orchestrator]: ==============================================================
+[2026-06-17 23:27:00] [INFO] [pipeline_orchestrator]:    ICU MORTALITY PREDICTION HYBRID PIPELINE INITIALIZED      
+[2026-06-17 23:27:00] [INFO] [pipeline_orchestrator]: ==============================================================
+[2026-06-17 23:27:00] [INFO] [utils_infra]: Global pseudorandom states locked securely using seed footprint: 42
+[2026-06-17 23:27:00] [WARNING] [utils_infra]: Reminder: Estimator-level routines require internal 'random_state' parameter assignment.
+[2026-06-17 23:27:00] [INFO] [pipeline_orchestrator]: [ETL STEP 1]: Extracting and compiling sparse text files...
+[2026-06-17 23:27:00] [CRITICAL] [pipeline_orchestrator]: System processing stopped by runtime exception: No raw patient text records found at: D:\ML Project\ICU Project\data\raw\set-a
+Please ensure your downloaded files are unzipped inside 'data/raw/set-a/'
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\train.py", line 29, in execute_end_to_end_training_pipeline
+    raw_db = compile_raw_database()
+  File "D:\ML Project\ICU Project\src\data_pipeline.py", line 83, in compile_raw_database
+    raise FileNotFoundError(
+FileNotFoundError: No raw patient text records found at: D:\ML Project\ICU Project\data\raw\set-a
+Please ensure your downloaded files are unzipped inside 'data/raw/set-a/'
+[2026-06-17 23:30:50] [INFO] [pipeline_orchestrator]: ==============================================================
+[2026-06-17 23:30:50] [INFO] [pipeline_orchestrator]:    ICU MORTALITY PREDICTION HYBRID PIPELINE INITIALIZED      
+[2026-06-17 23:30:50] [INFO] [pipeline_orchestrator]: ==============================================================
+[2026-06-17 23:30:50] [INFO] [utils_infra]: Global pseudorandom states locked securely using seed footprint: 42
+[2026-06-17 23:30:50] [WARNING] [utils_infra]: Reminder: Estimator-level routines require internal 'random_state' parameter assignment.
+[2026-06-17 23:30:50] [INFO] [pipeline_orchestrator]: [ETL STEP 1]: Extracting and compiling sparse text files...
+[2026-06-17 23:30:50] [INFO] [data_pipeline]: Discovered 4000 files. Compiling master clinical database...
+[2026-06-17 23:32:45] [INFO] [data_pipeline]: Database assembly complete. Total observations shape: (1757980, 4)
+[2026-06-17 23:32:45] [INFO] [pipeline_orchestrator]: [ETL STEP 2]: Running multi-engine feature extraction transformations...
+[2026-06-17 23:32:45] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (1757980, 4)
+[2026-06-17 23:32:52] [INFO] [feature_engineering]: Aggregating baseline chronological matrices...
+[2026-06-17 23:32:53] [INFO] [feature_engineering]: Executing vectorized timeline trajectory comparisons...
+[2026-06-17 23:32:53] [INFO] [feature_engineering]: Assembling structured missingness indicator matrix layers...
+[2026-06-17 23:32:53] [INFO] [feature_engineering]: Calculating advanced clinical metric indexes...
+[2026-06-17 23:32:53] [INFO] [feature_engineering]: return_sequences parameter verified. Compiling 3D temporal arrays...
+[2026-06-17 23:33:54] [INFO] [feature_engineering]: Advanced clinical feature construction sequence finalized successfully.
+[2026-06-17 23:33:54] [INFO] [pipeline_orchestrator]: [ETL STEP 3]: Aligning metrics with clinical survival outcome registries...
+[2026-06-17 23:33:54] [INFO] [data_pipeline]: Merging clinical summary metrics with survival outcome registries...
+[2026-06-17 23:33:54] [INFO] [data_pipeline]: Cohort assembly finalized successfully. Final cohort shape: (4000, 176)
+[2026-06-17 23:33:54] [INFO] [pipeline_orchestrator]: [SPLIT STEP]: Isolating a 15% pristine final holdout validation set...
+[2026-06-17 23:33:54] [INFO] [pipeline_orchestrator]: [MODELING STEP 1]: Running LightGBM Stratified Cross-Validation & Calibration...
+[2026-06-17 23:33:54] [INFO] [evaluation_engine]: Starting 5-Fold Stratified Validation Loop.
+[2026-06-17 23:33:56] [INFO] [evaluation_engine]: Fold 1 -> AUPRC: 0.4248 | Event1: 0.4330
+[2026-06-17 23:33:57] [INFO] [evaluation_engine]: Fold 2 -> AUPRC: 0.4772 | Event1: 0.4700
+[2026-06-17 23:33:59] [INFO] [evaluation_engine]: Fold 3 -> AUPRC: 0.5219 | Event1: 0.5300
+[2026-06-17 23:34:00] [INFO] [evaluation_engine]: Fold 4 -> AUPRC: 0.5367 | Event1: 0.5213
+[2026-06-17 23:34:01] [INFO] [evaluation_engine]: Fold 5 -> AUPRC: 0.4329 | Event1: 0.4174
+[2026-06-17 23:34:01] [INFO] [evaluation_engine]: --- Cross-Validation Stability Card ---
+[2026-06-17 23:34:01] [INFO] [evaluation_engine]:  Fold Variance -> Met: AUROC              | Value: 0.8456 ± 0.0064
+[2026-06-17 23:34:01] [INFO] [evaluation_engine]:  Fold Variance -> Met: AUPRC              | Value: 0.4787 ± 0.0452
+[2026-06-17 23:34:01] [INFO] [evaluation_engine]:  Fold Variance -> Met: PhysioNet_Event1   | Value: 0.4743 ± 0.0453
+[2026-06-17 23:34:01] [INFO] [evaluation_engine]:  Fold Variance -> Met: PhysioNet_Event2   | Value: 23.6978 ± 7.7929
+[2026-06-17 23:34:03] [INFO] [pipeline_orchestrator]: [MODELING STEP 2]: Running PyTorch LSTM Sequential Trajectory Learning...
+[2026-06-17 23:34:03] [INFO] [pytorch_dl_engine]: Initializing PyTorch execution training loops on device target: cpu
+[2026-06-17 23:34:03] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 1 / 5 ---
+[2026-06-17 23:34:05] [CRITICAL] [pipeline_orchestrator]: System processing stopped by runtime exception: all elements of input should be between 0 and 1
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\train.py", line 68, in execute_end_to_end_training_pipeline
+    lstm_champion_model, oof_lstm_probs = train_lstm(seq_dev, y_dev, n_epochs=25, batch_size=64)
+  File "D:\ML Project\ICU Project\src\model_dl.py", line 100, in train_lstm
+    loss = criterion(preds, batch_y)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\torch\nn\modules\loss.py", line 618, in forward
+    return F.binary_cross_entropy(input, target, weight=self.weight, reduction=self.reduction)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\torch\nn\functional.py", line 3127, in binary_cross_entropy
+    return torch._C._nn.binary_cross_entropy(input, target, weight, reduction_enum)
+RuntimeError: all elements of input should be between 0 and 1
+[2026-06-17 23:39:25] [INFO] [pipeline_orchestrator]: ==============================================================
+[2026-06-17 23:39:25] [INFO] [pipeline_orchestrator]:    ICU MORTALITY PREDICTION HYBRID PIPELINE INITIALIZED      
+[2026-06-17 23:39:25] [INFO] [pipeline_orchestrator]: ==============================================================
+[2026-06-17 23:39:25] [INFO] [utils_infra]: Global pseudorandom states locked securely using seed footprint: 42
+[2026-06-17 23:39:25] [WARNING] [utils_infra]: Reminder: Estimator-level routines require internal 'random_state' parameter assignment.
+[2026-06-17 23:39:25] [INFO] [pipeline_orchestrator]: [ETL STEP 1]: Extracting and compiling sparse text files...
+[2026-06-17 23:39:25] [INFO] [data_pipeline]: Discovered 4000 files. Compiling master clinical database...
+[2026-06-17 23:39:32] [INFO] [data_pipeline]: Database assembly complete. Total observations shape: (1757980, 4)
+[2026-06-17 23:39:32] [INFO] [pipeline_orchestrator]: [ETL STEP 2]: Running multi-engine feature extraction transformations...
+[2026-06-17 23:39:32] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (1757980, 4)
+[2026-06-17 23:39:34] [INFO] [feature_engineering]: Aggregating baseline chronological matrices...
+[2026-06-17 23:39:34] [INFO] [feature_engineering]: Executing vectorized timeline trajectory comparisons...
+[2026-06-17 23:39:34] [INFO] [feature_engineering]: Assembling structured missingness indicator matrix layers...
+[2026-06-17 23:39:34] [INFO] [feature_engineering]: Calculating advanced clinical metric indexes...
+[2026-06-17 23:39:34] [INFO] [feature_engineering]: return_sequences parameter verified. Compiling 3D temporal arrays...
+[2026-06-17 23:39:53] [INFO] [feature_engineering]: Advanced clinical feature construction sequence finalized successfully.
+[2026-06-17 23:39:53] [INFO] [pipeline_orchestrator]: [ETL STEP 3]: Aligning metrics with clinical survival outcome registries...
+[2026-06-17 23:39:53] [INFO] [data_pipeline]: Merging clinical summary metrics with survival outcome registries...
+[2026-06-17 23:39:53] [INFO] [data_pipeline]: Cohort assembly finalized successfully. Final cohort shape: (4000, 176)
+[2026-06-17 23:39:53] [INFO] [pipeline_orchestrator]: [SPLIT STEP]: Isolating a 15% pristine final holdout validation set...
+[2026-06-17 23:39:53] [INFO] [pipeline_orchestrator]: [MODELING STEP 1]: Running LightGBM Stratified Cross-Validation & Calibration...
+[2026-06-17 23:39:53] [INFO] [evaluation_engine]: Starting 5-Fold Stratified Validation Loop.
+[2026-06-17 23:39:53] [INFO] [evaluation_engine]: Fold 1 -> AUPRC: 0.4248 | Event1: 0.4330
+[2026-06-17 23:39:54] [INFO] [evaluation_engine]: Fold 2 -> AUPRC: 0.4772 | Event1: 0.4700
+[2026-06-17 23:39:54] [INFO] [evaluation_engine]: Fold 3 -> AUPRC: 0.5219 | Event1: 0.5300
+[2026-06-17 23:39:55] [INFO] [evaluation_engine]: Fold 4 -> AUPRC: 0.5367 | Event1: 0.5213
+[2026-06-17 23:39:55] [INFO] [evaluation_engine]: Fold 5 -> AUPRC: 0.4329 | Event1: 0.4174
+[2026-06-17 23:39:55] [INFO] [evaluation_engine]: --- Cross-Validation Stability Card ---
+[2026-06-17 23:39:55] [INFO] [evaluation_engine]:  Fold Variance -> Met: AUROC              | Value: 0.8456 ± 0.0064
+[2026-06-17 23:39:55] [INFO] [evaluation_engine]:  Fold Variance -> Met: AUPRC              | Value: 0.4787 ± 0.0452
+[2026-06-17 23:39:55] [INFO] [evaluation_engine]:  Fold Variance -> Met: PhysioNet_Event1   | Value: 0.4743 ± 0.0453
+[2026-06-17 23:39:55] [INFO] [evaluation_engine]:  Fold Variance -> Met: PhysioNet_Event2   | Value: 23.6978 ± 7.7929
+[2026-06-17 23:39:55] [INFO] [pipeline_orchestrator]: [MODELING STEP 2]: Running PyTorch LSTM Sequential Trajectory Learning...
+[2026-06-17 23:39:55] [INFO] [pytorch_dl_engine]: Initializing PyTorch execution training loops on device target: cpu
+[2026-06-17 23:39:55] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 1 / 5 ---
+[2026-06-17 23:39:59] [CRITICAL] [pipeline_orchestrator]: System processing stopped by runtime exception: Input contains NaN.
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\train.py", line 68, in execute_end_to_end_training_pipeline
+    lstm_champion_model, oof_lstm_probs = train_lstm(seq_dev, y_dev, n_epochs=25, batch_size=64)
+  File "D:\ML Project\ICU Project\src\model_dl.py", line 113, in train_lstm
+    val_auprc = average_precision_score(y_val_np, val_probs)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\utils\_param_validation.py", line 213, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\metrics\_ranking.py", line 268, in average_precision_score
+    return _average_binary_score(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\metrics\_base.py", line 76, in _average_binary_score
+    return binary_metric(y_true, y_score, sample_weight=sample_weight)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\metrics\_ranking.py", line 230, in _binary_uninterpolated_average_precision
+    precision, recall, _ = precision_recall_curve(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\utils\_param_validation.py", line 186, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\metrics\_ranking.py", line 1002, in precision_recall_curve
+    fps, tps, thresholds = _binary_clf_curve(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\metrics\_ranking.py", line 823, in _binary_clf_curve
+    assert_all_finite(y_score)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\utils\validation.py", line 213, in assert_all_finite
+    _assert_all_finite(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\utils\validation.py", line 123, in _assert_all_finite
+    _assert_all_finite_element_wise(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\utils\validation.py", line 172, in _assert_all_finite_element_wise
+    raise ValueError(msg_err)
+ValueError: Input contains NaN.
+[2026-06-17 23:45:05] [INFO] [pipeline_orchestrator]: ==============================================================
+[2026-06-17 23:45:05] [INFO] [pipeline_orchestrator]:    ICU MORTALITY PREDICTION HYBRID PIPELINE INITIALIZED      
+[2026-06-17 23:45:05] [INFO] [pipeline_orchestrator]: ==============================================================
+[2026-06-17 23:45:05] [INFO] [utils_infra]: Global pseudorandom states locked securely using seed footprint: 42
+[2026-06-17 23:45:05] [WARNING] [utils_infra]: Reminder: Estimator-level routines require internal 'random_state' parameter assignment.
+[2026-06-17 23:45:05] [INFO] [pipeline_orchestrator]: [ETL STEP 1]: Extracting and compiling sparse text files...
+[2026-06-17 23:45:05] [INFO] [data_pipeline]: Discovered 4000 files. Compiling master clinical database...
+[2026-06-17 23:45:13] [INFO] [data_pipeline]: Database assembly complete. Total observations shape: (1757980, 4)
+[2026-06-17 23:45:13] [INFO] [pipeline_orchestrator]: [ETL STEP 2]: Running multi-engine feature extraction transformations...
+[2026-06-17 23:45:13] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (1757980, 4)
+[2026-06-17 23:45:15] [INFO] [feature_engineering]: Aggregating baseline chronological matrices...
+[2026-06-17 23:45:15] [INFO] [feature_engineering]: Executing vectorized timeline trajectory comparisons...
+[2026-06-17 23:45:15] [INFO] [feature_engineering]: Assembling structured missingness indicator matrix layers...
+[2026-06-17 23:45:15] [INFO] [feature_engineering]: Calculating advanced clinical metric indexes...
+[2026-06-17 23:45:15] [INFO] [feature_engineering]: return_sequences parameter verified. Compiling 3D temporal arrays...
+[2026-06-17 23:45:56] [INFO] [feature_engineering]: Advanced clinical feature construction sequence finalized successfully.
+[2026-06-17 23:45:56] [INFO] [pipeline_orchestrator]: [ETL STEP 3]: Aligning metrics with clinical survival outcome registries...
+[2026-06-17 23:45:56] [INFO] [data_pipeline]: Merging clinical summary metrics with survival outcome registries...
+[2026-06-17 23:45:56] [INFO] [data_pipeline]: Cohort assembly finalized successfully. Final cohort shape: (4000, 176)
+[2026-06-17 23:45:56] [INFO] [pipeline_orchestrator]: [SPLIT STEP]: Isolating a 15% pristine final holdout validation set...
+[2026-06-17 23:45:56] [INFO] [pipeline_orchestrator]: [MODELING STEP 1]: Running LightGBM Stratified Cross-Validation & Calibration...
+[2026-06-17 23:45:56] [INFO] [evaluation_engine]: Starting 5-Fold Stratified Validation Loop.
+[2026-06-17 23:45:57] [INFO] [evaluation_engine]: Fold 1 -> AUPRC: 0.4248 | Event1: 0.4330
+[2026-06-17 23:45:58] [INFO] [evaluation_engine]: Fold 2 -> AUPRC: 0.4772 | Event1: 0.4700
+[2026-06-17 23:46:00] [INFO] [evaluation_engine]: Fold 3 -> AUPRC: 0.5219 | Event1: 0.5300
+[2026-06-17 23:46:01] [INFO] [evaluation_engine]: Fold 4 -> AUPRC: 0.5367 | Event1: 0.5213
+[2026-06-17 23:46:02] [INFO] [evaluation_engine]: Fold 5 -> AUPRC: 0.4329 | Event1: 0.4174
+[2026-06-17 23:46:02] [INFO] [evaluation_engine]: --- Cross-Validation Stability Card ---
+[2026-06-17 23:46:02] [INFO] [evaluation_engine]:  Fold Variance -> Met: AUROC              | Value: 0.8456 ± 0.0064
+[2026-06-17 23:46:02] [INFO] [evaluation_engine]:  Fold Variance -> Met: AUPRC              | Value: 0.4787 ± 0.0452
+[2026-06-17 23:46:02] [INFO] [evaluation_engine]:  Fold Variance -> Met: PhysioNet_Event1   | Value: 0.4743 ± 0.0453
+[2026-06-17 23:46:02] [INFO] [evaluation_engine]:  Fold Variance -> Met: PhysioNet_Event2   | Value: 23.6978 ± 7.7929
+[2026-06-17 23:46:03] [INFO] [pipeline_orchestrator]: [MODELING STEP 2]: Running PyTorch LSTM Sequential Trajectory Learning...
+[2026-06-17 23:46:03] [INFO] [pytorch_dl_engine]: Initializing PyTorch execution training loops on device target: cpu
+[2026-06-17 23:46:03] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 1 / 5 ---
+[2026-06-17 23:46:58] [INFO] [pytorch_dl_engine]: Fold 1 Finalized. Peak Validation AUPRC: 0.1397
+[2026-06-17 23:46:58] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 2 / 5 ---
+[2026-06-17 23:47:20] [INFO] [pytorch_dl_engine]: Fold 2 Finalized. Peak Validation AUPRC: 0.1382
+[2026-06-17 23:47:20] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 3 / 5 ---
+[2026-06-17 23:47:40] [INFO] [pytorch_dl_engine]: Fold 3 Finalized. Peak Validation AUPRC: 0.1382
+[2026-06-17 23:47:40] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 4 / 5 ---
+[2026-06-17 23:48:01] [INFO] [pytorch_dl_engine]: Fold 4 Finalized. Peak Validation AUPRC: 0.1382
+[2026-06-17 23:48:01] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 5 / 5 ---
+[2026-06-17 23:48:21] [INFO] [pytorch_dl_engine]: Fold 5 Finalized. Peak Validation AUPRC: 0.1382
+[2026-06-17 23:48:21] [INFO] [pipeline_orchestrator]: [MODELING STEP 3]: Evaluating out-of-fold hybrid blend performance...
+[2026-06-17 23:48:21] [INFO] [evaluation_engine]: ==================================================
+[2026-06-17 23:48:21] [INFO] [evaluation_engine]:    HYBRID ENSEMBLE HYBRID EVALUATION SUCCESSFUL   
+[2026-06-17 23:48:21] [INFO] [evaluation_engine]: ==================================================
+[2026-06-17 23:48:21] [INFO] [evaluation_engine]:  Ensemble Balanced Event1 Score: 0.4735
+[2026-06-17 23:48:21] [INFO] [evaluation_engine]:  Ensemble Calibration Event2 Metric: 1145.8371
+[2026-06-17 23:48:21] [INFO] [pipeline_orchestrator]: [EVALUATION STEP]: Testing ensemble performance on hidden data...
+[2026-06-17 23:48:21] [CRITICAL] [pipeline_orchestrator]: System processing stopped by runtime exception: Input contains NaN.
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\train.py", line 90, in execute_end_to_end_training_pipeline
+    final_test_scores = calculate_clinical_metrics(y_test, final_test_ensemble_probs)
+  File "D:\ML Project\ICU Project\src\evaluate.py", line 84, in calculate_clinical_metrics
+    p, r, _ = precision_recall_curve(y_true, y_prob)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\utils\_param_validation.py", line 213, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\metrics\_ranking.py", line 1002, in precision_recall_curve
+    fps, tps, thresholds = _binary_clf_curve(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\metrics\_ranking.py", line 823, in _binary_clf_curve
+    assert_all_finite(y_score)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\utils\validation.py", line 213, in assert_all_finite
+    _assert_all_finite(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\utils\validation.py", line 123, in _assert_all_finite
+    _assert_all_finite_element_wise(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\utils\validation.py", line 172, in _assert_all_finite_element_wise
+    raise ValueError(msg_err)
+ValueError: Input contains NaN.
+[2026-06-17 23:54:01] [INFO] [pipeline_orchestrator]: ==============================================================
+[2026-06-17 23:54:01] [INFO] [pipeline_orchestrator]:    ICU MORTALITY PREDICTION HYBRID PIPELINE INITIALIZED      
+[2026-06-17 23:54:01] [INFO] [pipeline_orchestrator]: ==============================================================
+[2026-06-17 23:54:01] [INFO] [utils_infra]: Global pseudorandom states locked securely using seed footprint: 42
+[2026-06-17 23:54:01] [WARNING] [utils_infra]: Reminder: Estimator-level routines require internal 'random_state' parameter assignment.
+[2026-06-17 23:54:01] [INFO] [pipeline_orchestrator]: [ETL STEP 1]: Extracting and compiling sparse text files...
+[2026-06-17 23:54:01] [INFO] [data_pipeline]: 🔍 No cache found. Scanning 4000 text files. This will take a moment...
+[2026-06-17 23:54:09] [INFO] [data_pipeline]: ✨ Successfully created database cache snapshot at: D:\ML Project\ICU Project\data\processed\raw_database_cache.parquet
+[2026-06-17 23:54:09] [INFO] [pipeline_orchestrator]: [ETL STEP 2]: Running multi-engine feature extraction transformations...
+[2026-06-17 23:54:09] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (1757980, 4)
+[2026-06-17 23:54:11] [INFO] [feature_engineering]: Aggregating baseline chronological matrices...
+[2026-06-17 23:54:11] [INFO] [feature_engineering]: Executing vectorized timeline trajectory comparisons...
+[2026-06-17 23:54:11] [INFO] [feature_engineering]: Assembling structured missingness indicator matrix layers...
+[2026-06-17 23:54:11] [INFO] [feature_engineering]: Calculating advanced clinical metric indexes...
+[2026-06-17 23:54:11] [INFO] [feature_engineering]: return_sequences parameter verified. Compiling 3D temporal arrays...
+[2026-06-17 23:54:30] [INFO] [feature_engineering]: Advanced clinical feature construction sequence finalized successfully.
+[2026-06-17 23:54:30] [INFO] [pipeline_orchestrator]: [ETL STEP 3]: Aligning metrics with clinical survival outcome registries...
+[2026-06-17 23:54:30] [INFO] [data_pipeline]: Merging clinical summary metrics with survival outcome registries...
+[2026-06-17 23:54:30] [INFO] [data_pipeline]: Cohort assembly finalized successfully. Final cohort shape: (4000, 176)
+[2026-06-17 23:54:30] [INFO] [pipeline_orchestrator]: [SPLIT STEP]: Isolating a 15% pristine final holdout validation set...
+[2026-06-17 23:54:30] [INFO] [pipeline_orchestrator]: [MODELING STEP 1]: Running LightGBM Stratified Cross-Validation & Calibration...
+[2026-06-17 23:54:30] [INFO] [evaluation_engine]: Starting 5-Fold Stratified Validation Loop.
+[2026-06-17 23:54:30] [INFO] [evaluation_engine]: Fold 1 -> AUPRC: 0.4248 | Event1: 0.4330
+[2026-06-17 23:54:31] [INFO] [evaluation_engine]: Fold 2 -> AUPRC: 0.4772 | Event1: 0.4700
+[2026-06-17 23:54:31] [INFO] [evaluation_engine]: Fold 3 -> AUPRC: 0.5219 | Event1: 0.5300
+[2026-06-17 23:54:31] [INFO] [evaluation_engine]: Fold 4 -> AUPRC: 0.5367 | Event1: 0.5213
+[2026-06-17 23:54:32] [INFO] [evaluation_engine]: Fold 5 -> AUPRC: 0.4329 | Event1: 0.4174
+[2026-06-17 23:54:32] [INFO] [evaluation_engine]: --- Cross-Validation Stability Card ---
+[2026-06-17 23:54:32] [INFO] [evaluation_engine]:  Fold Variance -> Met: AUROC              | Value: 0.8456 ± 0.0064
+[2026-06-17 23:54:32] [INFO] [evaluation_engine]:  Fold Variance -> Met: AUPRC              | Value: 0.4787 ± 0.0452
+[2026-06-17 23:54:32] [INFO] [evaluation_engine]:  Fold Variance -> Met: PhysioNet_Event1   | Value: 0.4743 ± 0.0453
+[2026-06-17 23:54:32] [INFO] [evaluation_engine]:  Fold Variance -> Met: PhysioNet_Event2   | Value: 23.6978 ± 7.7929
+[2026-06-17 23:54:32] [INFO] [pipeline_orchestrator]: [MODELING STEP 2]: Running PyTorch LSTM Sequential Trajectory Learning...
+[2026-06-17 23:54:32] [INFO] [pytorch_dl_engine]: Initializing PyTorch execution training loops on device target: cpu
+[2026-06-17 23:54:32] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 1 / 5 ---
+[2026-06-17 23:54:54] [INFO] [pytorch_dl_engine]: Fold 1 Finalized. Peak Validation AUPRC: 0.1397
+[2026-06-17 23:54:54] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 2 / 5 ---
+[2026-06-17 23:55:15] [INFO] [pytorch_dl_engine]: Fold 2 Finalized. Peak Validation AUPRC: 0.1382
+[2026-06-17 23:55:15] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 3 / 5 ---
+[2026-06-17 23:55:36] [INFO] [pytorch_dl_engine]: Fold 3 Finalized. Peak Validation AUPRC: 0.1382
+[2026-06-17 23:55:36] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 4 / 5 ---
+[2026-06-17 23:55:57] [INFO] [pytorch_dl_engine]: Fold 4 Finalized. Peak Validation AUPRC: 0.1382
+[2026-06-17 23:55:57] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 5 / 5 ---
+[2026-06-17 23:56:18] [INFO] [pytorch_dl_engine]: Fold 5 Finalized. Peak Validation AUPRC: 0.1382
+[2026-06-17 23:56:18] [INFO] [pipeline_orchestrator]: [MODELING STEP 3]: Evaluating out-of-fold hybrid blend performance...
+[2026-06-17 23:56:19] [INFO] [evaluation_engine]: ==================================================
+[2026-06-17 23:56:19] [INFO] [evaluation_engine]:    HYBRID ENSEMBLE HYBRID EVALUATION SUCCESSFUL   
+[2026-06-17 23:56:19] [INFO] [evaluation_engine]: ==================================================
+[2026-06-17 23:56:19] [INFO] [evaluation_engine]:  Ensemble Balanced Event1 Score: 0.4735
+[2026-06-17 23:56:19] [INFO] [evaluation_engine]:  Ensemble Calibration Event2 Metric: 1145.8371
+[2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]: [EVALUATION STEP]: Testing ensemble performance on hidden data...
+[2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]: ==================================================
+[2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]:        FINAL PROSPECTIVE HOLDOUT PERFORMANCE       
+[2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]: ==================================================
+[2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]:  Test Set Area Under PR Curve (AUPRC): 0.5302
+[2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]:  Test Set Area Under ROC Curve (AUROC): 0.8689
+[2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]:  Test Balanced Event1 Score:            0.5238
+[2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]:  Test Calibration Event2 Score:         0.1007
+[2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]: ==================================================
+[2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]: [SERIALIZATION]: Freezing system artifacts to target: D:\ML Project\ICU Project\models
+[2026-06-17 23:56:19] [INFO] [utils_infra]: Successfully serialized production asset artifact to disk destination: D:\ML Project\ICU Project\models\hybrid_ensemble_core.joblib
+[2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]: Processing execution complete. Elapsed time: 0:02:18.397498

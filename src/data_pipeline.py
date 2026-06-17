@@ -1,75 +1,135 @@
-import os
+# src/data_pipeline.py
+"""
+Project ICU: Data Ingestion & Cohort Assembly Pipeline
+Handles batch parsing of raw irregular patient files, enforces the 48-hour 
+prospective observation window, and integrates outcome targets.
+"""
+
 import pandas as pd
 import numpy as np
-from typing import List
+import logging
+from pathlib import Path
 
-def parse_single_patient_file(file_path: str) -> dict:
+import config
+from src.utils import setup_logger, EmptyPatientRecordError, MissingDemographicsError
+
+# Initialize module-level diagnostic auditor
+logger = setup_logger("data_pipeline")
+
+def parse_chronological_time(time_str: str) -> int:
+    """Converts HH:MM clinical text file timestamps into absolute integer minutes elapsed."""
+    try:
+        if not isinstance(time_str, str) or ':' not in time_str:
+            return 0
+        parts = time_str.split(':')
+        return int(parts[0]) * 60 + int(parts[1])
+    except Exception:
+        return 0
+
+def process_raw_patient_file(file_path: Path) -> pd.DataFrame:
     """
-    Parses a single sparse 3-column PhysioNet text file 
-    and converts it into a flat summary dictionary.
+    Transforms a single sparse patient text file into a clean time-series dataframe.
+    Enforces strict clinical window cutoffs and safety checks.
     """
-    # Extract the RecordID from the filename
-    record_id = os.path.basename(file_path).replace('.txt', '')
-    
-    # Read the text file safely
-    df = pd.read_csv(file_path, header=0, names=['Time', 'Parameter', 'Value'])
-    
-    # Create our structured row starting with the unique ID
-    patient_features = {'RecordID': int(record_id)}
-    
-    # Isolate unique variables present in this patient's data
-    unique_parameters = df['Parameter'].unique()
-    
-    for param in unique_parameters:
-        param_data = df[df['Parameter'] == param]
+    try:
+        record_id = int(file_path.stem)
         
-        # Scenario 1: Fixed Demographics (Age, Gender, etc.)
-        if param in ['Age', 'Gender', 'Height', 'ICUType']:
-            patient_features[param] = param_data['Value'].iloc[0]
+        # Read the raw 3-column format: Time, Parameter, Value
+        df = pd.read_csv(file_path, sep=',', header=0)
+        
+        # Fallback safeguard for empty files
+        if df.empty:
+            raise EmptyPatientRecordError(record_id, "Raw text file contains no operational entries.")
             
-        # Scenario 2: Time-Series Metrics (Aggregate to avoid dimension explosion)
-        else:
-            # Drop negative values or physiological noise anomalies
-            valid_values = param_data['Value'][param_data['Value'] >= 0]
+        # Convert textual hour blocks to total minutes elapsed
+        df['minutes'] = df['Time'].apply(parse_chronological_time)
+        df['RecordId'] = record_id
+        
+        # Enforce the strict 48-Hour Observation Window to prevent target data leakage
+        df = df[df['minutes'] <= config.OBSERVATION_WINDOW_MINUTES]
+        
+        if df.empty:
+            raise EmptyPatientRecordError(record_id, "No measurements found within the prospective 48-hour window.")
             
-            if not valid_values.empty:
-                # Capture the clinical statistical baseline across the first 48 hours
-                patient_features[f'{param}_mean'] = valid_values.mean()
-                patient_features[f'{param}_min'] = valid_values.min()
-                patient_features[f'{param}_max'] = valid_values.max()
-                # Informative Missingness: This feature was successfully measured!
-                patient_features[f'{param}_is_missing'] = 0
-            else:
-                # Feature was never measured
-                patient_features[f'{param}_is_missing'] = 1
-
-    return patient_features
-
-def build_consolidated_dataset(raw_dir_path: str) -> pd.DataFrame:
-    """
-    Iterates through the raw folder containing thousands of patient files,
-    parses each sequentially, and stacks them into a single wide dataset.
-    """
-    all_patients = []
-    
-    if not os.path.exists(raw_dir_path):
-        raise FileNotFoundError(f"Directory not found at: {raw_dir_path}")
+        # Verify essential demographic markers exist on ICU admission
+        unique_parameters = df['Parameter'].values
+        if 'Age' not in unique_parameters:
+            raise MissingDemographicsError(record_id, "Age")
+        if 'Gender' not in unique_parameters:
+            raise MissingDemographicsError(record_id, "Gender")
+            
+        return df[['RecordId', 'minutes', 'Parameter', 'Value']]
         
-    file_list = [f for f in os.listdir(raw_dir_path) if f.endswith('.txt')]
-    print(f"--> Found {len(file_list)} records in {raw_dir_path}. Commencing pipeline parse...")
-    
-    for filename in file_list:
-        full_path = os.path.join(raw_dir_path, filename)
-        patient_dict = parse_single_patient_file(full_path)
-        all_patients.append(patient_dict)
-        
-    # Convert list of dictionaries cleanly to a flat Dataframe
-    dataset = pd.DataFrame(all_patients)
-    
-    # Fill remaining gaps where features were absent across the entire cohort
-    dataset = dataset.fillna(dataset.median())
-    
-    return dataset
+    except EmptyPatientRecordError as e:
+        # Log empty records as warnings rather than crashing the whole system run
+        logger.warning(str(e))
+        return pd.DataFrame()
+    except MissingDemographicsError as e:
+        logger.warning(str(e))
+        return pd.DataFrame()
+    except Exception as e:
+        logger.error(f"Unexpected parsing failure on record {file_path.name}: {str(e)}")
+        return pd.DataFrame()
 
-if __name__ == "__main__":
-    print("PhysioNet 2012 Pipeline Module compiled successfully.")
+def compile_raw_database() -> pd.DataFrame:
+    """
+    Aggregates all 4,000 separate patient text files into a master dataset.
+    Uses binary Parquet caching to skip file scanning on consecutive runs.
+    """
+    # Define a clean path destination for our binary snapshot file
+    cache_path = config.PROCESSED_DATA_DIR / "raw_database_cache.parquet"
+    
+    # SMART CHECK: If the snapshot file already exists, load it instantly and skip the rest!
+    if cache_path.exists():
+        logger.info(f"💾 Found cached database snapshot at {cache_path}. Loading instantly...")
+        return pd.read_parquet(cache_path)
+        
+    # --- IF NO CACHE EXISTS, DO THE SLOW FILE SCAN ONCE ---
+    target_folder = config.RAW_DATA_DIR / "set-a"
+    patient_files = list(target_folder.glob("*.txt"))
+    
+    if not patient_files:
+        raise FileNotFoundError(
+            f"No raw patient text records found at: {target_folder}\n"
+            f"Please ensure your downloaded files are unzipped inside 'data/raw/set-a/'"
+        )
+        
+    logger.info(f"🔍 No cache found. Scanning {len(patient_files)} text files. This will take a moment...")
+    
+    master_frames = []
+    for f in patient_files:
+        patient_df = process_raw_patient_file(f)
+        if not patient_df.empty:
+            master_frames.append(patient_df)
+            
+    if not master_frames:
+        raise RuntimeError("All discovered patient records failed validation checks.")
+        
+    # Combine everything into one table
+    consolidated_long_df = pd.concat(master_frames, ignore_index=True)
+    
+    # SAVE THE CACHE SNAPSHOT: Freeze it down so next time is instantaneous
+    config.PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    consolidated_long_df.to_parquet(cache_path, compression="snappy")
+    logger.info(f"✨ Successfully created database cache snapshot at: {cache_path}")
+    
+    return consolidated_long_df
+
+def attach_outcomes(features_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Aligns and merges calculated patient features with their actual survival outcomes.
+    Guarantees no row alignment mismatches during training loops.
+    """
+    outcomes_file = config.RAW_DATA_DIR / "Outcomes-a.txt"
+    if not outcomes_file.exists():
+        raise FileNotFoundError(f"Critical target file missing. Please place 'Outcomes-a.txt' in: {config.RAW_DATA_DIR}")
+        
+    outcomes_df = pd.read_csv(outcomes_file)
+    # Standardize column naming conventions to avoid merge errors
+    outcomes_df = outcomes_df.rename(columns={'RecordID': 'RecordId'})
+    
+    logger.info("Merging clinical summary metrics with survival outcome registries...")
+    final_dataset = pd.merge(features_df, outcomes_df[['RecordId', 'In-hospital_death']], on='RecordId', how='inner')
+    
+    logger.info(f"Cohort assembly finalized successfully. Final cohort shape: {final_dataset.shape}")
+    return final_dataset
