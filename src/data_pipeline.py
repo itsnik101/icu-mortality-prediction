@@ -1,135 +1,107 @@
 # src/data_pipeline.py
-"""
-Project ICU: Data Ingestion & Cohort Assembly Pipeline
-Handles batch parsing of raw irregular patient files, enforces the 48-hour 
-prospective observation window, and integrates outcome targets.
-"""
-
+import os
+import sys
 import pandas as pd
 import numpy as np
-import logging
 from pathlib import Path
+from typing import List, Dict, Any
 
 import config
-from src.utils import setup_logger, EmptyPatientRecordError, MissingDemographicsError
+from src.utils import setup_logger
 
-# Initialize module-level diagnostic auditor
 logger = setup_logger("data_pipeline")
-
-def parse_chronological_time(time_str: str) -> int:
-    """Converts HH:MM clinical text file timestamps into absolute integer minutes elapsed."""
-    try:
-        if not isinstance(time_str, str) or ':' not in time_str:
-            return 0
-        parts = time_str.split(':')
-        return int(parts[0]) * 60 + int(parts[1])
-    except Exception:
-        return 0
 
 def process_raw_patient_file(file_path: Path) -> pd.DataFrame:
     """
-    Transforms a single sparse patient text file into a clean time-series dataframe.
-    Enforces strict clinical window cutoffs and safety checks.
+    Parses a single sparse ASCII patient text file into a clean DataFrame.
+    Intercepts explicit missingness markers (-1), empty strings, and text NaN
+    signatures to preserve downstream informative missingness signals.
     """
     try:
-        record_id = int(file_path.stem)
+        with open(file_path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
         
-        # Read the raw 3-column format: Time, Parameter, Value
-        df = pd.read_csv(file_path, sep=',', header=0)
+        records = []
+        for line in lines[1:]:
+            parts = line.strip().split(',')
+            if len(parts) == 3:
+                param_name = parts[1].strip()
+                raw_val = parts[2].strip()
+                
+                # FIXED: Comprehensive string token matcher preventing runtime float casting failures
+                if raw_val in ('-1', '', 'NaN', 'nan', 'None'):
+                    val_score = np.nan
+                else:
+                    try:
+                        val_score = float(raw_val)
+                    except ValueError:
+                        val_score = np.nan
+                
+                records.append({
+                    "Timestamp": parts[0].strip(),
+                    "Parameter": param_name,
+                    "Value": val_score
+                })
+                
+        return pd.DataFrame(records)
         
-        # Fallback safeguard for empty files
-        if df.empty:
-            raise EmptyPatientRecordError(record_id, "Raw text file contains no operational entries.")
-            
-        # Convert textual hour blocks to total minutes elapsed
-        df['minutes'] = df['Time'].apply(parse_chronological_time)
-        df['RecordId'] = record_id
-        
-        # Enforce the strict 48-Hour Observation Window to prevent target data leakage
-        df = df[df['minutes'] <= config.OBSERVATION_WINDOW_MINUTES]
-        
-        if df.empty:
-            raise EmptyPatientRecordError(record_id, "No measurements found within the prospective 48-hour window.")
-            
-        # Verify essential demographic markers exist on ICU admission
-        unique_parameters = df['Parameter'].values
-        if 'Age' not in unique_parameters:
-            raise MissingDemographicsError(record_id, "Age")
-        if 'Gender' not in unique_parameters:
-            raise MissingDemographicsError(record_id, "Gender")
-            
-        return df[['RecordId', 'minutes', 'Parameter', 'Value']]
-        
-    except EmptyPatientRecordError as e:
-        # Log empty records as warnings rather than crashing the whole system run
-        logger.warning(str(e))
-        return pd.DataFrame()
-    except MissingDemographicsError as e:
-        logger.warning(str(e))
-        return pd.DataFrame()
     except Exception as e:
-        logger.error(f"Unexpected parsing failure on record {file_path.name}: {str(e)}")
+        logger.debug(f"Skipping corrupt or unreadable patient ledger {file_path.name}: {str(e)}")
         return pd.DataFrame()
 
-def compile_raw_database() -> pd.DataFrame:
+def compile_raw_database(dataset_type: str = "set-a") -> pd.DataFrame:
     """
-    Aggregates all 4,000 separate patient text files into a master dataset.
-    Uses binary Parquet caching to skip file scanning on consecutive runs.
+    Aggregates thousands of patient flat logs into a single long-form
+    compressed database dataframe backed by Parquet local cache storage.
     """
-    # Define a clean path destination for our binary snapshot file
-    cache_path = config.PROCESSED_DATA_DIR / "raw_database_cache.parquet"
+    cache_path = config.PROCESSED_DATA_DIR / f"raw_database_cache_{dataset_type.replace('-', '_')}.parquet"
     
-    # SMART CHECK: If the snapshot file already exists, load it instantly and skip the rest!
     if cache_path.exists():
-        logger.info(f"💾 Found cached database snapshot at {cache_path}. Loading instantly...")
+        logger.info(f"💾 Discovered compiled binary cache snapshot for {dataset_type} at {cache_path}. Loading...")
         return pd.read_parquet(cache_path)
         
-    # --- IF NO CACHE EXISTS, DO THE SLOW FILE SCAN ONCE ---
-    target_folder = config.RAW_DATA_DIR / "set-a"
-    patient_files = list(target_folder.glob("*.txt"))
-    
-    if not patient_files:
-        raise FileNotFoundError(
-            f"No raw patient text records found at: {target_folder}\n"
-            f"Please ensure your downloaded files are unzipped inside 'data/raw/set-a/'"
-        )
+    target_dir = config.RAW_DATA_DIR / dataset_type
+    if not target_dir.exists():
+        logger.error(f"Target data directory context path not found: {target_dir}")
+        raise FileNotFoundError(f"Directory {target_dir} is completely missing.")
         
-    logger.info(f"🔍 No cache found. Scanning {len(patient_files)} text files. This will take a moment...")
+    all_files = list(target_dir.glob("*.txt"))
+    logger.info(f"🔍 No cache found. Aggregating {len(all_files)} text logs for {dataset_type}...")
     
-    master_frames = []
-    for f in patient_files:
-        patient_df = process_raw_patient_file(f)
-        if not patient_df.empty:
-            master_frames.append(patient_df)
+    compiled_dfs = []
+    for f_path in all_files:
+        try:
+            record_id = int(f_path.stem)
+            patient_df = process_raw_patient_file(f_path)
+            if not patient_df.empty:
+                patient_df["RecordId"] = record_id
+                compiled_dfs.append(patient_df)
+        except Exception as e:
+            logger.warning(f"Failed parsing file metadata block {f_path.name}: {str(e)}")
             
-    if not master_frames:
-        raise RuntimeError("All discovered patient records failed validation checks.")
+    if not compiled_dfs:
+        raise RuntimeError(f"Data Ingestion cycle collapsed. 0 valid text files were parsed from {target_dir}")
         
-    # Combine everything into one table
-    consolidated_long_df = pd.concat(master_frames, ignore_index=True)
-    
-    # SAVE THE CACHE SNAPSHOT: Freeze it down so next time is instantaneous
-    config.PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
-    consolidated_long_df.to_parquet(cache_path, compression="snappy")
-    logger.info(f"✨ Successfully created database cache snapshot at: {cache_path}")
-    
-    return consolidated_long_df
+    master_long_df = pd.concat(compiled_dfs, ignore_index=True)
+    master_long_df.to_parquet(cache_path, compression="snappy")
+    logger.info(f"✨ Successfully frozen compressed database snapshot cache at: {cache_path}")
+    return master_long_df
 
-def attach_outcomes(features_df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Aligns and merges calculated patient features with their actual survival outcomes.
-    Guarantees no row alignment mismatches during training loops.
-    """
-    outcomes_file = config.RAW_DATA_DIR / "Outcomes-a.txt"
-    if not outcomes_file.exists():
-        raise FileNotFoundError(f"Critical target file missing. Please place 'Outcomes-a.txt' in: {config.RAW_DATA_DIR}")
+def attach_outcomes(features_df: pd.DataFrame, dataset_type: str = "set-a") -> pd.DataFrame:
+    """Handshakes advanced extracted features with true mortality target indices."""
+    outcome_filename = "Outcomes-a.txt" if dataset_type == "set-a" else "Outcomes-b.txt"
+    outcome_path = config.RAW_DATA_DIR / outcome_filename
+    
+    if not outcome_path.exists():
+        logger.error(f"Ground truth clinical label targets file missing at path: {outcome_path}")
+        raise FileNotFoundError(f"Missing registry ledger file: {outcome_filename}")
         
-    outcomes_df = pd.read_csv(outcomes_file)
-    # Standardize column naming conventions to avoid merge errors
-    outcomes_df = outcomes_df.rename(columns={'RecordID': 'RecordId'})
+    labels_df = pd.read_csv(outcome_path)
+    labels_df.columns = [col.replace('ID', 'Id') for col in labels_df.columns]
     
-    logger.info("Merging clinical summary metrics with survival outcome registries...")
-    final_dataset = pd.merge(features_df, outcomes_df[['RecordId', 'In-hospital_death']], on='RecordId', how='inner')
+    target_columns = ["RecordId", "In-hospital_death"]
+    labels_subset = labels_df[target_columns].copy()
     
-    logger.info(f"Cohort assembly finalized successfully. Final cohort shape: {final_dataset.shape}")
-    return final_dataset
+    merged_dataset = pd.merge(features_df, labels_subset, on="RecordId", how="inner")
+    logger.info(f"Label alignment complete for {dataset_type}. Matched records cohort count: {merged_dataset.shape[0]}")
+    return merged_dataset

@@ -257,3 +257,499 @@ ValueError: Input contains NaN.
 [2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]: [SERIALIZATION]: Freezing system artifacts to target: D:\ML Project\ICU Project\models
 [2026-06-17 23:56:19] [INFO] [utils_infra]: Successfully serialized production asset artifact to disk destination: D:\ML Project\ICU Project\models\hybrid_ensemble_core.joblib
 [2026-06-17 23:56:19] [INFO] [pipeline_orchestrator]: Processing execution complete. Elapsed time: 0:02:18.397498
+[2026-06-20 21:31:27] [INFO] [api_serving_engine]: Initializing system startup sequence. Loading defrosted production assets into RAM memory...
+[2026-06-20 21:31:27] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-20 21:31:27] [INFO] [api_serving_engine]: Tabular features list successfully verified. Total registered column shape: 174
+[2026-06-20 21:31:28] [INFO] [api_serving_engine]: Production frameworks successfully mapped onto hardware target execution device: cpu
+[2026-06-20 21:31:28] [INFO] [api_serving_engine]: FastAPI inference operational engine is fully live and online.
+[2026-06-20 21:34:45] [INFO] [api_serving_engine]: Initializing system startup sequence. Loading defrosted production assets into RAM memory...
+[2026-06-20 21:34:45] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-20 21:34:45] [INFO] [api_serving_engine]: Tabular features list successfully verified. Total registered column shape: 174
+[2026-06-20 21:34:45] [INFO] [api_serving_engine]: Production frameworks successfully mapped onto hardware target execution device: cpu
+[2026-06-20 21:34:45] [INFO] [api_serving_engine]: FastAPI inference operational engine is fully live and online.
+[2026-06-20 21:35:30] [INFO] [streamlit_client_app]: User pushed execution evaluation button. Age=72, GCS=9.0
+[2026-06-20 21:35:30] [INFO] [api_serving_engine]: Incoming transaction request received. Initializing inference transformation assembly...
+[2026-06-20 21:35:30] [INFO] [api_serving_engine]: Risk evaluation calculated successfully: Probability=nan | Status=STABLE / LOW RISK
+[2026-06-20 21:35:30] [INFO] [api_serving_engine]: Computing local feature attribution coefficients using TreeSHAP algorithms...
+[2026-06-20 21:35:30] [ERROR] [explainability_engine]: Failed to generate tabular SHAP explanations: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+[2026-06-20 21:35:30] [ERROR] [api_serving_engine]: Runtime failure tracking out inference processing blocks: Explainability execution trace fault: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\explain.py", line 29, in generate_tabular_explanation
+    explainer = shap.TreeExplainer(model)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\shap\explainers\_tree.py", line 278, in __init__
+    self.model = TreeEnsemble(model, self.data, self.data_missing, model_output)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\shap\explainers\_tree.py", line 1442, in __init__
+    raise InvalidModelError("Model type not yet supported by TreeExplainer: " + str(type(model)))
+shap.utils._exceptions.InvalidModelError: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\api\main.py", line 131, in execute_hybrid_clinical_inference
+    raw_shap = generate_tabular_explanation(lgbm_ensemble, X_patient, feature_checklist)
+  File "D:\ML Project\ICU Project\src\explain.py", line 55, in generate_tabular_explanation
+    raise RuntimeError(f"Explainability execution trace fault: {str(e)}")
+RuntimeError: Explainability execution trace fault: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+[2026-06-20 21:35:30] [ERROR] [streamlit_client_app]: API serving endpoint node dropped connection. HTTP Error Code: 500
+[2026-06-20 21:35:40] [INFO] [streamlit_client_app]: User pushed execution evaluation button. Age=72, GCS=9.0
+[2026-06-20 21:35:40] [INFO] [api_serving_engine]: Incoming transaction request received. Initializing inference transformation assembly...
+[2026-06-20 21:35:40] [INFO] [api_serving_engine]: Risk evaluation calculated successfully: Probability=nan | Status=STABLE / LOW RISK
+[2026-06-20 21:35:40] [INFO] [api_serving_engine]: Computing local feature attribution coefficients using TreeSHAP algorithms...
+[2026-06-20 21:35:40] [ERROR] [explainability_engine]: Failed to generate tabular SHAP explanations: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+[2026-06-20 21:35:40] [ERROR] [api_serving_engine]: Runtime failure tracking out inference processing blocks: Explainability execution trace fault: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\explain.py", line 29, in generate_tabular_explanation
+    explainer = shap.TreeExplainer(model)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\shap\explainers\_tree.py", line 278, in __init__
+    self.model = TreeEnsemble(model, self.data, self.data_missing, model_output)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\shap\explainers\_tree.py", line 1442, in __init__
+    raise InvalidModelError("Model type not yet supported by TreeExplainer: " + str(type(model)))
+shap.utils._exceptions.InvalidModelError: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\api\main.py", line 131, in execute_hybrid_clinical_inference
+    raw_shap = generate_tabular_explanation(lgbm_ensemble, X_patient, feature_checklist)
+  File "D:\ML Project\ICU Project\src\explain.py", line 55, in generate_tabular_explanation
+    raise RuntimeError(f"Explainability execution trace fault: {str(e)}")
+RuntimeError: Explainability execution trace fault: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+[2026-06-20 21:35:40] [ERROR] [streamlit_client_app]: API serving endpoint node dropped connection. HTTP Error Code: 500
+[2026-06-20 21:35:53] [INFO] [streamlit_client_app]: User pushed execution evaluation button. Age=72, GCS=9.0
+[2026-06-20 21:35:53] [INFO] [api_serving_engine]: Incoming transaction request received. Initializing inference transformation assembly...
+[2026-06-20 21:35:53] [INFO] [api_serving_engine]: Risk evaluation calculated successfully: Probability=nan | Status=STABLE / LOW RISK
+[2026-06-20 21:35:53] [INFO] [api_serving_engine]: Computing local feature attribution coefficients using TreeSHAP algorithms...
+[2026-06-20 21:35:53] [ERROR] [explainability_engine]: Failed to generate tabular SHAP explanations: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+[2026-06-20 21:35:53] [ERROR] [api_serving_engine]: Runtime failure tracking out inference processing blocks: Explainability execution trace fault: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\explain.py", line 29, in generate_tabular_explanation
+    explainer = shap.TreeExplainer(model)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\shap\explainers\_tree.py", line 278, in __init__
+    self.model = TreeEnsemble(model, self.data, self.data_missing, model_output)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\shap\explainers\_tree.py", line 1442, in __init__
+    raise InvalidModelError("Model type not yet supported by TreeExplainer: " + str(type(model)))
+shap.utils._exceptions.InvalidModelError: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\api\main.py", line 131, in execute_hybrid_clinical_inference
+    raw_shap = generate_tabular_explanation(lgbm_ensemble, X_patient, feature_checklist)
+  File "D:\ML Project\ICU Project\src\explain.py", line 55, in generate_tabular_explanation
+    raise RuntimeError(f"Explainability execution trace fault: {str(e)}")
+RuntimeError: Explainability execution trace fault: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+[2026-06-20 21:35:53] [ERROR] [streamlit_client_app]: API serving endpoint node dropped connection. HTTP Error Code: 500
+[2026-06-20 21:35:54] [INFO] [streamlit_client_app]: User pushed execution evaluation button. Age=72, GCS=9.0
+[2026-06-20 21:35:54] [INFO] [api_serving_engine]: Incoming transaction request received. Initializing inference transformation assembly...
+[2026-06-20 21:35:54] [INFO] [api_serving_engine]: Risk evaluation calculated successfully: Probability=nan | Status=STABLE / LOW RISK
+[2026-06-20 21:35:54] [INFO] [api_serving_engine]: Computing local feature attribution coefficients using TreeSHAP algorithms...
+[2026-06-20 21:35:54] [ERROR] [explainability_engine]: Failed to generate tabular SHAP explanations: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+[2026-06-20 21:35:54] [ERROR] [api_serving_engine]: Runtime failure tracking out inference processing blocks: Explainability execution trace fault: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\explain.py", line 29, in generate_tabular_explanation
+    explainer = shap.TreeExplainer(model)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\shap\explainers\_tree.py", line 278, in __init__
+    self.model = TreeEnsemble(model, self.data, self.data_missing, model_output)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\shap\explainers\_tree.py", line 1442, in __init__
+    raise InvalidModelError("Model type not yet supported by TreeExplainer: " + str(type(model)))
+shap.utils._exceptions.InvalidModelError: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\api\main.py", line 131, in execute_hybrid_clinical_inference
+    raw_shap = generate_tabular_explanation(lgbm_ensemble, X_patient, feature_checklist)
+  File "D:\ML Project\ICU Project\src\explain.py", line 55, in generate_tabular_explanation
+    raise RuntimeError(f"Explainability execution trace fault: {str(e)}")
+RuntimeError: Explainability execution trace fault: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+[2026-06-20 21:35:54] [ERROR] [streamlit_client_app]: API serving endpoint node dropped connection. HTTP Error Code: 500
+[2026-06-20 21:35:54] [INFO] [streamlit_client_app]: User pushed execution evaluation button. Age=72, GCS=9.0
+[2026-06-20 21:35:54] [INFO] [api_serving_engine]: Incoming transaction request received. Initializing inference transformation assembly...
+[2026-06-20 21:35:54] [INFO] [api_serving_engine]: Risk evaluation calculated successfully: Probability=nan | Status=STABLE / LOW RISK
+[2026-06-20 21:35:54] [INFO] [api_serving_engine]: Computing local feature attribution coefficients using TreeSHAP algorithms...
+[2026-06-20 21:35:54] [ERROR] [explainability_engine]: Failed to generate tabular SHAP explanations: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+[2026-06-20 21:35:54] [ERROR] [api_serving_engine]: Runtime failure tracking out inference processing blocks: Explainability execution trace fault: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\explain.py", line 29, in generate_tabular_explanation
+    explainer = shap.TreeExplainer(model)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\shap\explainers\_tree.py", line 278, in __init__
+    self.model = TreeEnsemble(model, self.data, self.data_missing, model_output)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\shap\explainers\_tree.py", line 1442, in __init__
+    raise InvalidModelError("Model type not yet supported by TreeExplainer: " + str(type(model)))
+shap.utils._exceptions.InvalidModelError: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\api\main.py", line 131, in execute_hybrid_clinical_inference
+    raw_shap = generate_tabular_explanation(lgbm_ensemble, X_patient, feature_checklist)
+  File "D:\ML Project\ICU Project\src\explain.py", line 55, in generate_tabular_explanation
+    raise RuntimeError(f"Explainability execution trace fault: {str(e)}")
+RuntimeError: Explainability execution trace fault: Model type not yet supported by TreeExplainer: <class 'sklearn.calibration.CalibratedClassifierCV'>
+[2026-06-20 21:35:54] [ERROR] [streamlit_client_app]: API serving endpoint node dropped connection. HTTP Error Code: 500
+[2026-06-20 21:37:47] [INFO] [api_serving_engine]: Initializing system startup sequence. Loading defrosted production assets into RAM memory...
+[2026-06-20 21:37:47] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-20 21:37:47] [INFO] [api_serving_engine]: Tabular features list successfully verified. Total registered column shape: 174
+[2026-06-20 21:37:47] [INFO] [api_serving_engine]: Production frameworks successfully mapped onto hardware target execution device: cpu
+[2026-06-20 21:37:47] [INFO] [api_serving_engine]: FastAPI inference operational engine is fully live and online.
+[2026-06-20 21:37:56] [INFO] [api_serving_engine]: Initializing system startup sequence. Loading defrosted production assets into RAM memory...
+[2026-06-20 21:37:56] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-20 21:37:56] [INFO] [api_serving_engine]: Tabular features list successfully verified. Total registered column shape: 174
+[2026-06-20 21:37:56] [INFO] [api_serving_engine]: Production frameworks successfully mapped onto hardware target execution device: cpu
+[2026-06-20 21:37:56] [INFO] [api_serving_engine]: FastAPI inference operational engine is fully live and online.
+[2026-06-20 21:38:37] [INFO] [api_serving_engine]: Initializing system startup sequence. Loading defrosted production assets into RAM memory...
+[2026-06-20 21:38:37] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-20 21:38:37] [INFO] [api_serving_engine]: Tabular features list successfully verified. Total registered column shape: 174
+[2026-06-20 21:38:37] [INFO] [api_serving_engine]: Production frameworks successfully mapped onto hardware target execution device: cpu
+[2026-06-20 21:38:37] [INFO] [api_serving_engine]: FastAPI inference operational engine is fully live and online.
+[2026-06-20 21:38:45] [INFO] [streamlit_client_app]: User pushed execution evaluation button. Age=65, GCS=12.0
+[2026-06-20 21:38:45] [INFO] [api_serving_engine]: Incoming transaction request received. Initializing inference transformation assembly...
+[2026-06-20 21:38:45] [INFO] [api_serving_engine]: Risk evaluation calculated successfully: Probability=0.1925 | Status=STABLE / LOW RISK
+[2026-06-20 21:38:45] [INFO] [api_serving_engine]: Computing local feature attribution coefficients using TreeSHAP algorithms...
+[2026-06-20 21:38:46] [INFO] [api_serving_engine]: Transaction completed cleanly. Execution serving latency: 525.37 ms
+[2026-06-20 21:38:46] [INFO] [streamlit_client_app]: API evaluation response received successfully. Blended Probability Output: 0.1925
+[2026-06-20 21:38:46] [INFO] [streamlit_client_app]: SHAP attribution metric metrics rendered successfully on dashboard plot layer.
+[2026-06-20 21:39:23] [INFO] [streamlit_client_app]: User pushed execution evaluation button. Age=78, GCS=10.0
+[2026-06-20 21:39:23] [INFO] [api_serving_engine]: Incoming transaction request received. Initializing inference transformation assembly...
+[2026-06-20 21:39:23] [INFO] [api_serving_engine]: Risk evaluation calculated successfully: Probability=0.2193 | Status=STABLE / LOW RISK
+[2026-06-20 21:39:23] [INFO] [api_serving_engine]: Computing local feature attribution coefficients using TreeSHAP algorithms...
+[2026-06-20 21:39:23] [INFO] [api_serving_engine]: Transaction completed cleanly. Execution serving latency: 471.90 ms
+[2026-06-20 21:39:23] [INFO] [streamlit_client_app]: API evaluation response received successfully. Blended Probability Output: 0.2193
+[2026-06-20 21:39:23] [INFO] [streamlit_client_app]: SHAP attribution metric metrics rendered successfully on dashboard plot layer.
+[2026-06-21 23:14:38] [INFO] [set_b_test_orchestrator]: ==============================================================
+[2026-06-21 23:14:38] [INFO] [set_b_test_orchestrator]:        ICU FRAMEWORK: SET B PROSPECTIVE EVALUATION LOOP        
+[2026-06-21 23:14:38] [INFO] [set_b_test_orchestrator]: ==============================================================
+[2026-06-21 23:14:38] [INFO] [set_b_test_orchestrator]: 📂 Loading deep-frozen production payload snapshot from disk...
+[2026-06-21 23:14:38] [ERROR] [utils_infra]: Requested production artifact file is missing from target path structure: D:\ML Project\ICU Project\models\models\hybrid_ensemble_core.joblib
+[2026-06-21 23:14:38] [CRITICAL] [set_b_test_orchestrator]: Set B prospective testing iteration failed: Requested clinical operational state template models/hybrid_ensemble_core.joblib cannot be located.
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\test_set_b.py", line 36, in process_and_evaluate_set_b
+    payload = load_artifact("models/hybrid_ensemble_core.joblib")
+  File "D:\ML Project\ICU Project\src\utils.py", line 83, in load_artifact
+    raise FileNotFoundError(f"Requested clinical operational state template {filename} cannot be located.")
+FileNotFoundError: Requested clinical operational state template models/hybrid_ensemble_core.joblib cannot be located.
+[2026-06-21 23:16:45] [INFO] [set_b_test_orchestrator]: ==============================================================
+[2026-06-21 23:16:45] [INFO] [set_b_test_orchestrator]:        ICU FRAMEWORK: SET B PROSPECTIVE EVALUATION LOOP        
+[2026-06-21 23:16:45] [INFO] [set_b_test_orchestrator]: ==============================================================
+[2026-06-21 23:16:45] [INFO] [set_b_test_orchestrator]: 📂 Loading deep-frozen production payload snapshot from disk...
+[2026-06-21 23:16:46] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-21 23:16:46] [INFO] [set_b_test_orchestrator]: 🔍 Discovered 4000 fresh patient profiles. Parsing records...
+[2026-06-21 23:19:32] [INFO] [set_b_test_orchestrator]: Set B Database compilation complete. Observation shape: (1762535, 4)
+[2026-06-21 23:19:32] [INFO] [set_b_test_orchestrator]: ⚡ Executing multi-engine temporal feature extractions...
+[2026-06-21 23:19:32] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (1762535, 4)
+[2026-06-21 23:19:34] [INFO] [feature_engineering]: Aggregating baseline chronological matrices...
+[2026-06-21 23:19:34] [INFO] [feature_engineering]: Executing vectorized timeline trajectory comparisons...
+[2026-06-21 23:19:34] [INFO] [feature_engineering]: Assembling structured missingness indicator matrix layers...
+[2026-06-21 23:19:35] [INFO] [feature_engineering]: Calculating advanced clinical metric indexes...
+[2026-06-21 23:19:35] [INFO] [feature_engineering]: return_sequences parameter verified. Compiling 3D temporal arrays...
+[2026-06-21 23:20:29] [INFO] [feature_engineering]: Advanced clinical feature construction sequence finalized successfully.
+[2026-06-21 23:20:29] [CRITICAL] [set_b_test_orchestrator]: Set B prospective testing iteration failed: "['RecordId'] not in index"
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\test_set_b.py", line 76, in process_and_evaluate_set_b
+    master_dataset = pd.merge(tabular_features, labels_df[['RecordId', 'In-hospital_death']], on='RecordId', how='inner')
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\pandas\core\frame.py", line 4119, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\pandas\core\indexes\base.py", line 6212, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\pandas\core\indexes\base.py", line 6264, in _raise_if_missing
+    raise KeyError(f"{not_found} not in index")
+KeyError: "['RecordId'] not in index"
+[2026-06-21 23:26:51] [INFO] [set_b_test_orchestrator]: ==============================================================
+[2026-06-21 23:26:51] [INFO] [set_b_test_orchestrator]:        ICU FRAMEWORK: SET B PROSPECTIVE EVALUATION LOOP        
+[2026-06-21 23:26:51] [INFO] [set_b_test_orchestrator]: ==============================================================
+[2026-06-21 23:26:51] [INFO] [set_b_test_orchestrator]: 📂 Loading deep-frozen production payload from disk memory...
+[2026-06-21 23:26:51] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-21 23:26:51] [INFO] [data_pipeline]: 🔍 No cache found. Aggregating 4000 text logs for set-b...
+[2026-06-21 23:26:56] [INFO] [data_pipeline]: ✨ Successfully frozen compressed database snapshot cache at: D:\ML Project\ICU Project\data\processed\raw_database_cache_set_b.parquet
+[2026-06-21 23:26:56] [INFO] [set_b_test_orchestrator]: ⚡ Executing multi-engine temporal feature extractions...
+[2026-06-21 23:26:56] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (1762535, 4)
+[2026-06-21 23:26:56] [INFO] [feature_engineering]: Computing timeline minute arrays from chronological strings...
+[2026-06-21 23:26:56] [CRITICAL] [set_b_test_orchestrator]: Set B prospective testing iteration failed: 'Time'
+Traceback (most recent call last):
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\pandas\core\indexes\base.py", line 3812, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas/_libs/index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7096, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Time'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\test_set_b.py", line 44, in process_and_evaluate_set_b
+    feature_package = extract_advanced_clinical_features(raw_db_b, return_sequences=True)
+  File "D:\ML Project\ICU Project\src\features.py", line 27, in extract_advanced_clinical_features
+    ts_data['minutes'] = ts_data['Time'].apply(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\pandas\core\frame.py", line 4113, in __getitem__
+    indexer = self.columns.get_loc(key)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\pandas\core\indexes\base.py", line 3819, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Time'
+[2026-06-21 23:33:26] [INFO] [set_b_test_orchestrator]: ==============================================================
+[2026-06-21 23:33:26] [INFO] [set_b_test_orchestrator]:        ICU FRAMEWORK: SET B PROSPECTIVE EVALUATION LOOP        
+[2026-06-21 23:33:26] [INFO] [set_b_test_orchestrator]: ==============================================================
+[2026-06-21 23:33:26] [INFO] [set_b_test_orchestrator]: 📂 Loading deep-frozen operational state dictionary from disk...
+[2026-06-21 23:33:27] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-21 23:33:27] [INFO] [data_pipeline]: 🔍 No cache found. Aggregating 4000 text logs for set-b...
+[2026-06-21 23:33:31] [INFO] [data_pipeline]: ✨ Successfully frozen compressed database snapshot cache at: D:\ML Project\ICU Project\data\processed\raw_database_cache_set_b.parquet
+[2026-06-21 23:33:31] [INFO] [set_b_test_orchestrator]: ⚡ Executing multi-engine temporal feature extractions...
+[2026-06-21 23:33:31] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (1762535, 4)
+[2026-06-21 23:33:32] [INFO] [feature_engineering]: Computing timeline minute arrays from chronological strings...
+[2026-06-21 23:33:33] [INFO] [feature_engineering]: Aggregating baseline chronological matrices...
+[2026-06-21 23:33:34] [INFO] [feature_engineering]: Executing vectorized timeline trajectory comparisons...
+[2026-06-21 23:33:34] [INFO] [feature_engineering]: return_sequences parameter verified. Compiling 3D temporal arrays...
+[2026-06-21 23:33:54] [INFO] [feature_engineering]: Advanced clinical feature construction sequence finalized successfully.
+[2026-06-21 23:33:55] [INFO] [set_b_test_orchestrator]: Set B matched cohort finalized. Total sample size: 4000 patients.
+[2026-06-21 23:33:55] [INFO] [set_b_test_orchestrator]: 🔮 Running inference across ensembled LightGBM decision trees...
+[2026-06-21 23:33:55] [INFO] [set_b_test_orchestrator]: 🔮 Running timeline inference through PyTorch LSTM...
+[2026-06-21 23:33:56] [INFO] [set_b_test_orchestrator]: ==================================================
+[2026-06-21 23:33:56] [INFO] [set_b_test_orchestrator]:          OFFICIAL SET B PROSPECTIVE SCORE CARD     
+[2026-06-21 23:33:56] [INFO] [set_b_test_orchestrator]: ==================================================
+[2026-06-21 23:33:56] [INFO] [set_b_test_orchestrator]:  Set B Area Under PR Curve (AUPRC):  0.4436
+[2026-06-21 23:33:56] [INFO] [set_b_test_orchestrator]:  Set B Area Under ROC Curve (AUROC): 0.8319
+[2026-06-21 23:33:56] [INFO] [set_b_test_orchestrator]:  Set B Balanced Event1 Metric Score: 0.4676
+[2026-06-21 23:33:56] [INFO] [set_b_test_orchestrator]:  Set B Expected Brier Loss Matrix:   0.1069
+[2026-06-21 23:33:56] [INFO] [set_b_test_orchestrator]: ==================================================
+[2026-06-21 23:33:56] [INFO] [set_b_test_orchestrator]: ✨ Feature dataset logs and array configurations saved to: D:\ML Project\ICU Project\data\processed
+[2026-06-21 23:33:56] [INFO] [set_b_test_orchestrator]: Total processing loop latency: 29.77 seconds.
+[2026-06-21 23:39:19] [INFO] [combined_master_train_engine]: ==============================================================
+[2026-06-21 23:39:19] [INFO] [combined_master_train_engine]:   ICU MORTALITY SYSTEM: UNIFIED MASTER RETRAINING PIPELINE     
+[2026-06-21 23:39:19] [INFO] [combined_master_train_engine]: ==============================================================
+[2026-06-21 23:39:19] [INFO] [utils_infra]: Global pseudorandom states locked securely using seed footprint: 42
+[2026-06-21 23:39:19] [WARNING] [utils_infra]: Reminder: Estimator-level routines require internal 'random_state' parameter assignment.
+[2026-06-21 23:39:19] [INFO] [combined_master_train_engine]: [ETL]: Loading data frames from compressed Parquet caching pools...
+[2026-06-21 23:39:19] [INFO] [data_pipeline]: 🔍 No cache found. Aggregating 4000 text logs for set-a...
+[2026-06-21 23:41:14] [INFO] [data_pipeline]: ✨ Successfully frozen compressed database snapshot cache at: D:\ML Project\ICU Project\data\processed\raw_database_cache_set_a.parquet
+[2026-06-21 23:41:14] [INFO] [data_pipeline]: 💾 Discovered compiled binary cache snapshot for set-b at D:\ML Project\ICU Project\data\processed\raw_database_cache_set_b.parquet. Loading...
+[2026-06-21 23:41:15] [INFO] [combined_master_train_engine]: [ETL]: Snapshot A shape: (1757980, 4) | Snapshot B shape: (1762535, 4)
+[2026-06-21 23:41:15] [INFO] [combined_master_train_engine]: [ETL]: Stacking finalized. Combined observation record shape: (3520515, 4)
+[2026-06-21 23:41:15] [INFO] [combined_master_train_engine]: [FEATURES]: Dispatching data columns to type-safe extraction layer...
+[2026-06-21 23:41:15] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (3520515, 4)
+[2026-06-21 23:41:17] [INFO] [feature_engineering]: Computing timeline minute arrays from chronological strings...
+[2026-06-21 23:41:30] [INFO] [feature_engineering]: Aggregating baseline chronological matrices...
+[2026-06-21 23:41:32] [INFO] [feature_engineering]: Executing vectorized timeline trajectory comparisons...
+[2026-06-21 23:41:32] [INFO] [feature_engineering]: return_sequences parameter verified. Compiling 3D temporal arrays...
+[2026-06-21 23:44:02] [INFO] [feature_engineering]: Advanced clinical feature construction sequence finalized successfully.
+[2026-06-21 23:44:02] [INFO] [combined_master_train_engine]: [REGISTRY]: Re-aligning patient identities with clinical ground truth ledgers...
+[2026-06-21 23:44:02] [INFO] [combined_master_train_engine]: [REGISTRY]: Master data array dimensions set: (8000, 118) across 8000 patients.
+[2026-06-21 23:44:02] [INFO] [combined_master_train_engine]: [SPLIT]: Segregating a 15% pristine, untouched validation holdout cohort...
+[2026-06-21 23:44:02] [INFO] [combined_master_train_engine]: [MODELING STEP 1]: Training ensembled LightGBM models across 5 stratified folds...
+[2026-06-21 23:44:02] [INFO] [evaluation_engine]: Starting 5-Fold Stratified Validation Loop.
+[2026-06-21 23:44:04] [INFO] [evaluation_engine]: Fold 1 -> AUPRC: 0.5350 | Event1: 0.5000
+[2026-06-21 23:44:06] [INFO] [evaluation_engine]: Fold 2 -> AUPRC: 0.4829 | Event1: 0.4660
+[2026-06-21 23:44:07] [INFO] [evaluation_engine]: Fold 3 -> AUPRC: 0.4428 | Event1: 0.4485
+[2026-06-21 23:44:09] [INFO] [evaluation_engine]: Fold 4 -> AUPRC: 0.5271 | Event1: 0.5026
+[2026-06-21 23:44:10] [INFO] [evaluation_engine]: Fold 5 -> AUPRC: 0.4880 | Event1: 0.4560
+[2026-06-21 23:44:10] [INFO] [evaluation_engine]: --- Cross-Validation Stability Card ---
+[2026-06-21 23:44:10] [INFO] [evaluation_engine]:  Fold Variance -> Met: AUROC              | Value: 0.8420 ± 0.0195
+[2026-06-21 23:44:10] [INFO] [evaluation_engine]:  Fold Variance -> Met: AUPRC              | Value: 0.4952 ± 0.0333
+[2026-06-21 23:44:10] [INFO] [evaluation_engine]:  Fold Variance -> Met: PhysioNet_Event1   | Value: 0.4746 ± 0.0225
+[2026-06-21 23:44:10] [INFO] [evaluation_engine]:  Fold Variance -> Met: PhysioNet_Event2   | Value: 33.4597 ± 9.3968
+[2026-06-21 23:44:12] [INFO] [combined_master_train_engine]: [MODELING STEP 2]: Training PyTorch Bidirectional LSTM on sequential vitals lines...
+[2026-06-21 23:44:12] [INFO] [pytorch_dl_engine]: Initializing PyTorch execution training loops on device target: cpu
+[2026-06-21 23:44:12] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 1 / 5 ---
+[2026-06-21 23:50:53] [INFO] [pytorch_dl_engine]: Fold 1 Finalized. Peak Validation AUPRC: 0.4821
+[2026-06-21 23:50:54] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 2 / 5 ---
+[2026-06-21 23:56:48] [INFO] [pytorch_dl_engine]: Fold 2 Finalized. Peak Validation AUPRC: 0.3869
+[2026-06-21 23:56:49] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 3 / 5 ---
+[2026-06-22 00:01:48] [INFO] [pytorch_dl_engine]: Fold 3 Finalized. Peak Validation AUPRC: 0.3584
+[2026-06-22 00:01:49] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 4 / 5 ---
+[2026-06-22 00:08:46] [INFO] [pytorch_dl_engine]: Fold 4 Finalized. Peak Validation AUPRC: 0.4462
+[2026-06-22 00:08:47] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 5 / 5 ---
+[2026-06-22 00:12:44] [INFO] [pytorch_dl_engine]: Fold 5 Finalized. Peak Validation AUPRC: 0.4153
+[2026-06-22 00:12:44] [INFO] [combined_master_train_engine]: [EVALUATION]: Computing prospective benchmark scores against locked 15% holdout...
+[2026-06-22 00:12:45] [INFO] [combined_master_train_engine]: ==================================================
+[2026-06-22 00:12:45] [INFO] [combined_master_train_engine]:       UPGRADED MASTER HYBRID MODEL TEST SCORES     
+[2026-06-22 00:12:45] [INFO] [combined_master_train_engine]: ==================================================
+[2026-06-22 00:12:45] [INFO] [combined_master_train_engine]:  Combined Master Cohort AUPRC:  0.4969
+[2026-06-22 00:12:45] [INFO] [combined_master_train_engine]:  Combined Master Cohort AUROC:  0.8493
+[2026-06-22 00:12:45] [INFO] [combined_master_train_engine]:  Combined Master Cohort Event1: 0.5000
+[2026-06-22 00:12:45] [INFO] [combined_master_train_engine]:  Combined Master Cohort Event2: 0.0920
+[2026-06-22 00:12:45] [INFO] [combined_master_train_engine]: ==================================================
+[2026-06-22 00:12:45] [INFO] [combined_master_train_engine]: [SERIALIZATION]: Archiving production artifacts inside a compressed single file template...
+[2026-06-22 00:12:45] [INFO] [utils_infra]: Successfully serialized production asset artifact to disk destination: D:\ML Project\ICU Project\models\hybrid_ensemble_core.joblib
+[2026-06-22 00:12:45] [INFO] [combined_master_train_engine]: ✨ Master training sequence completed perfectly. Elapsed Runtime: 0:33:26.161911
+[2026-06-22 00:19:31] [INFO] [api_serving_engine]: Initializing system startup sequence. Ingesting combined master model framework...
+[2026-06-22 00:19:32] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-22 00:19:32] [INFO] [api_serving_engine]: [BOOT]: Unified tabular checklist verified. Total predictive dimensions: 10
+[2026-06-22 00:19:32] [INFO] [api_serving_engine]: [BOOT]: PyTorch sequential matrix skeleton mapped onto hardware device: cpu
+[2026-06-22 00:19:32] [INFO] [api_serving_engine]: ================== API SERVICE ONLINE ==================
+[2026-06-22 00:22:25] [INFO] [streamlit_client_app]: Transaction triggered. Inputs payload size generated: 10 attributes.
+[2026-06-22 00:22:25] [INFO] [api_serving_engine]: Incoming transaction request received. Re-aligning pydantic data contract features...
+[2026-06-22 00:22:25] [ERROR] [api_serving_engine]: Runtime failure tracking out inference processing blocks: X has 12 features, but LGBMClassifier is expecting 118 features as input.
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\api\main.py", line 120, in execute_hybrid_clinical_inference
+    lgbm_prob = np.mean([model.predict_proba(X_patient.values)[:, 1] for model in lgbm_ensemble], axis=0)[0]
+  File "D:\ML Project\ICU Project\api\main.py", line 120, in <listcomp>
+    lgbm_prob = np.mean([model.predict_proba(X_patient.values)[:, 1] for model in lgbm_ensemble], axis=0)[0]
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\calibration.py", line 495, in predict_proba
+    proba = calibrated_classifier.predict_proba(X)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\calibration.py", line 725, in predict_proba
+    predictions, _ = _get_response_values(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\utils\_response.py", line 211, in _get_response_values
+    y_pred = prediction_method(X)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\lightgbm\sklearn.py", line 1627, in predict_proba
+    result = super().predict(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\lightgbm\sklearn.py", line 1108, in predict
+    X = _LGBMValidateData(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\lightgbm\compat.py", line 91, in validate_data
+    raise ValueError(
+ValueError: X has 12 features, but LGBMClassifier is expecting 118 features as input.
+[2026-06-22 00:22:30] [INFO] [streamlit_client_app]: Transaction triggered. Inputs payload size generated: 10 attributes.
+[2026-06-22 00:22:30] [INFO] [api_serving_engine]: Incoming transaction request received. Re-aligning pydantic data contract features...
+[2026-06-22 00:22:30] [ERROR] [api_serving_engine]: Runtime failure tracking out inference processing blocks: X has 12 features, but LGBMClassifier is expecting 118 features as input.
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\api\main.py", line 120, in execute_hybrid_clinical_inference
+    lgbm_prob = np.mean([model.predict_proba(X_patient.values)[:, 1] for model in lgbm_ensemble], axis=0)[0]
+  File "D:\ML Project\ICU Project\api\main.py", line 120, in <listcomp>
+    lgbm_prob = np.mean([model.predict_proba(X_patient.values)[:, 1] for model in lgbm_ensemble], axis=0)[0]
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\calibration.py", line 495, in predict_proba
+    proba = calibrated_classifier.predict_proba(X)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\calibration.py", line 725, in predict_proba
+    predictions, _ = _get_response_values(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\sklearn\utils\_response.py", line 211, in _get_response_values
+    y_pred = prediction_method(X)
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\lightgbm\sklearn.py", line 1627, in predict_proba
+    result = super().predict(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\lightgbm\sklearn.py", line 1108, in predict
+    X = _LGBMValidateData(
+  File "C:\Users\nikhi\.conda\envs\venv\lib\site-packages\lightgbm\compat.py", line 91, in validate_data
+    raise ValueError(
+ValueError: X has 12 features, but LGBMClassifier is expecting 118 features as input.
+[2026-06-22 00:23:31] [INFO] [api_serving_engine]: Initializing system startup sequence. Ingesting combined master model framework...
+[2026-06-22 00:23:31] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-22 00:23:31] [INFO] [api_serving_engine]: [BOOT]: Unified tabular checklist verified. Total predictive dimensions: 118
+[2026-06-22 00:23:31] [INFO] [api_serving_engine]: [BOOT]: PyTorch sequential matrix skeleton mapped onto hardware device: cpu
+[2026-06-22 00:23:31] [INFO] [api_serving_engine]: ================== API SERVICE ONLINE ==================
+[2026-06-22 00:26:29] [INFO] [streamlit_client_app]: Transaction triggered. Inputs payload size generated: 10 attributes.
+[2026-06-22 00:26:29] [INFO] [api_serving_engine]: Incoming transaction request received. Re-aligning pydantic data contract features...
+[2026-06-22 00:26:29] [INFO] [api_serving_engine]: Risk evaluation finalized: Probability=0.1529 | Status=STABLE / LOW RISK
+[2026-06-22 00:26:29] [INFO] [api_serving_engine]: Transaction compiled cleanly. Server internal latency: 434.81 ms
+[2026-06-22 00:29:23] [INFO] [api_serving_engine]: Initializing system startup sequence. Ingesting combined master model framework...
+[2026-06-22 00:29:23] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-22 00:29:23] [INFO] [api_serving_engine]: [BOOT]: Unified tabular checklist verified. Total predictive dimensions: 118
+[2026-06-22 00:29:23] [INFO] [api_serving_engine]: [BOOT]: PyTorch sequential matrix skeleton mapped onto hardware device: cpu
+[2026-06-22 00:29:23] [INFO] [api_serving_engine]: ================== API SERVICE ONLINE ==================
+[2026-06-22 00:29:34] [INFO] [streamlit_client_app]: Transaction triggered. Inputs payload size generated: 4 attributes.
+[2026-06-22 00:29:34] [INFO] [api_serving_engine]: Incoming transaction request received. Re-aligning pydantic data contract features...
+[2026-06-22 00:29:34] [INFO] [api_serving_engine]: Risk evaluation finalized: Probability=0.0389 | Status=STABLE / LOW RISK
+[2026-06-22 00:29:35] [INFO] [api_serving_engine]: Transaction compiled cleanly. Server internal latency: 599.27 ms
+[2026-06-22 00:31:45] [INFO] [streamlit_client_app]: Transaction triggered. Inputs payload size generated: 4 attributes.
+[2026-06-22 00:31:46] [INFO] [api_serving_engine]: Initializing system startup sequence. Ingesting combined master model framework...
+[2026-06-22 00:31:46] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-22 00:31:46] [INFO] [api_serving_engine]: [BOOT]: Unified tabular checklist verified. Total predictive dimensions: 118
+[2026-06-22 00:31:46] [INFO] [api_serving_engine]: [BOOT]: PyTorch sequential matrix skeleton mapped onto hardware device: cpu
+[2026-06-22 00:31:46] [INFO] [api_serving_engine]: ================== API SERVICE ONLINE ==================
+[2026-06-22 00:31:46] [INFO] [api_serving_engine]: Incoming transaction request received. Re-aligning pydantic data contract features...
+[2026-06-22 00:31:46] [INFO] [api_serving_engine]: Risk evaluation finalized: Probability=0.0389 | Status=STABLE / LOW RISK
+[2026-06-22 00:31:46] [INFO] [api_serving_engine]: Transaction compiled cleanly. Server internal latency: 646.60 ms
+[2026-06-22 00:32:30] [INFO] [streamlit_client_app]: Transaction triggered. Inputs payload size generated: 6 attributes.
+[2026-06-22 00:32:30] [INFO] [api_serving_engine]: Incoming transaction request received. Re-aligning pydantic data contract features...
+[2026-06-22 00:32:30] [INFO] [api_serving_engine]: Risk evaluation finalized: Probability=0.0389 | Status=STABLE / LOW RISK
+[2026-06-22 00:32:30] [INFO] [api_serving_engine]: Transaction compiled cleanly. Server internal latency: 639.65 ms
+[2026-06-22 00:34:36] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-22 00:34:36] [INFO] [api_serving_engine]: [BOOT]: Aligned feature space schema verified. Expected columns: 118
+[2026-06-22 00:34:48] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-22 00:34:48] [INFO] [api_serving_engine]: [BOOT]: Aligned feature space schema verified. Expected columns: 118
+[2026-06-22 00:34:59] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-22 00:34:59] [INFO] [api_serving_engine]: [BOOT]: Aligned feature space schema verified. Expected columns: 118
+[2026-06-22 00:36:52] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-22 00:36:52] [INFO] [api_serving_engine]: [BOOT]: Aligned feature space schema verified. Expected columns: 118
+[2026-06-22 00:38:12] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-22 00:38:12] [INFO] [api_serving_engine]: [BOOT]: Aligned feature space schema verified. Expected columns: 118
+[2026-06-22 00:38:24] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-22 00:38:24] [INFO] [api_serving_engine]: [BOOT]: Aligned feature space schema verified. Expected columns: 118
+[2026-06-22 00:39:22] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-22 00:39:22] [INFO] [api_serving_engine]: [BOOT]: Aligned feature space schema verified. Expected columns: 118
+[2026-06-22 00:41:57] [INFO] [utils_infra]: Successfully loaded and verified structure for asset file: hybrid_ensemble_core.joblib
+[2026-06-22 00:41:57] [INFO] [api_serving_engine]: [BOOT]: Aligned feature space schema verified. Expected columns: 118
+[2026-06-22 00:43:33] [INFO] [combined_master_train_engine]: ==============================================================
+[2026-06-22 00:43:33] [INFO] [combined_master_train_engine]:   ICU MORTALITY SYSTEM: UNIFIED MASTER RETRAINING PIPELINE     
+[2026-06-22 00:43:33] [INFO] [combined_master_train_engine]: ==============================================================
+[2026-06-22 00:43:33] [INFO] [utils_infra]: Global pseudorandom states locked securely using seed footprint: 42
+[2026-06-22 00:43:33] [WARNING] [utils_infra]: Reminder: Estimator-level routines require internal 'random_state' parameter assignment.
+[2026-06-22 00:43:33] [INFO] [combined_master_train_engine]: [ETL]: Loading data frames from compressed Parquet caching pools...
+[2026-06-22 00:43:33] [INFO] [data_pipeline]: 🔍 No cache found. Aggregating 4000 text logs for set-a...
+[2026-06-22 00:43:44] [INFO] [data_pipeline]: ✨ Successfully frozen compressed database snapshot cache at: D:\ML Project\ICU Project\data\processed\raw_database_cache_set_a.parquet
+[2026-06-22 00:43:44] [INFO] [data_pipeline]: 🔍 No cache found. Aggregating 4000 text logs for set-b...
+[2026-06-22 00:43:56] [INFO] [data_pipeline]: ✨ Successfully frozen compressed database snapshot cache at: D:\ML Project\ICU Project\data\processed\raw_database_cache_set_b.parquet
+[2026-06-22 00:43:56] [INFO] [combined_master_train_engine]: [ETL]: Snapshot A shape: (1757980, 4) | Snapshot B shape: (1762535, 4)
+[2026-06-22 00:43:56] [INFO] [combined_master_train_engine]: [ETL]: Stacking finalized. Combined observation record shape: (3520515, 4)
+[2026-06-22 00:43:56] [INFO] [combined_master_train_engine]: [FEATURES]: Dispatching data columns to type-safe extraction layer...
+[2026-06-22 00:43:56] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (3520515, 4)
+[2026-06-22 01:22:53] [INFO] [combined_master_train_engine]: ==============================================================
+[2026-06-22 01:22:53] [INFO] [combined_master_train_engine]:   ICU MORTALITY SYSTEM: UNIFIED MASTER RETRAINING PIPELINE     
+[2026-06-22 01:22:53] [INFO] [combined_master_train_engine]: ==============================================================
+[2026-06-22 01:22:53] [INFO] [utils_infra]: Global pseudorandom states locked securely using seed footprint: 42
+[2026-06-22 01:22:53] [WARNING] [utils_infra]: Reminder: Estimator-level routines require internal 'random_state' parameter assignment.
+[2026-06-22 01:22:53] [INFO] [combined_master_train_engine]: [ETL]: Ingesting raw databases from compressed Parquet caching pools...
+[2026-06-22 01:22:53] [INFO] [data_pipeline]: 🔍 No cache found. Aggregating 4000 text logs for set-a...
+[2026-06-22 01:22:57] [INFO] [data_pipeline]: ✨ Successfully frozen compressed database snapshot cache at: D:\ML Project\ICU Project\data\processed\raw_database_cache_set_a.parquet
+[2026-06-22 01:22:57] [INFO] [data_pipeline]: 🔍 No cache found. Aggregating 4000 text logs for set-b...
+[2026-06-22 01:23:01] [INFO] [data_pipeline]: ✨ Successfully frozen compressed database snapshot cache at: D:\ML Project\ICU Project\data\processed\raw_database_cache_set_b.parquet
+[2026-06-22 01:23:01] [INFO] [combined_master_train_engine]: [FEATURES]: Extracting structural profiles from Set A pools...
+[2026-06-22 01:23:01] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (1757980, 4)
+[2026-06-22 01:23:12] [INFO] [combined_master_train_engine]: [FEATURES]: Extracting structural profiles from Set B pools...
+[2026-06-22 01:23:12] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (1762535, 4)
+[2026-06-22 01:23:24] [INFO] [combined_master_train_engine]: [REGISTRY]: Mapping independent outcome survival labels...
+[2026-06-22 01:23:24] [INFO] [data_pipeline]: Label alignment complete for set-a. Matched records cohort count: 4000
+[2026-06-22 01:23:24] [INFO] [data_pipeline]: Label alignment complete for set-b. Matched records cohort count: 4000
+[2026-06-22 01:23:24] [INFO] [combined_master_train_engine]: [REGISTRY]: Index matching validated. Wide matrix dimension: (8000, 118) across 8000 patients.
+[2026-06-22 01:23:24] [CRITICAL] [combined_master_train_engine]: Unified master training pipeline execution stalled: module 'config' has no attribute 'TEST_SIZE_PROPORTION'
+Traceback (most recent call last):
+  File "D:\ML Project\ICU Project\src\train_combined.py", line 73, in execute_combined_master_training
+    indices, y_master, test_size=config.TEST_SIZE_PROPORTION, stratify=y_master, random_state=config.SEED
+AttributeError: module 'config' has no attribute 'TEST_SIZE_PROPORTION'
+[2026-06-22 01:25:37] [INFO] [combined_master_train_engine]: ==============================================================
+[2026-06-22 01:25:37] [INFO] [combined_master_train_engine]:   ICU MORTALITY SYSTEM: UNIFIED MASTER RETRAINING PIPELINE     
+[2026-06-22 01:25:37] [INFO] [combined_master_train_engine]: ==============================================================
+[2026-06-22 01:25:37] [INFO] [utils_infra]: Global pseudorandom states locked securely using seed footprint: 42
+[2026-06-22 01:25:37] [WARNING] [utils_infra]: Reminder: Estimator-level routines require internal 'random_state' parameter assignment.
+[2026-06-22 01:25:37] [INFO] [combined_master_train_engine]: [ETL]: Ingesting raw databases from compressed Parquet caching pools...
+[2026-06-22 01:25:37] [INFO] [data_pipeline]: 💾 Discovered compiled binary cache snapshot for set-a at D:\ML Project\ICU Project\data\processed\raw_database_cache_set_a.parquet. Loading...
+[2026-06-22 01:25:37] [INFO] [data_pipeline]: 💾 Discovered compiled binary cache snapshot for set-b at D:\ML Project\ICU Project\data\processed\raw_database_cache_set_b.parquet. Loading...
+[2026-06-22 01:25:37] [INFO] [combined_master_train_engine]: [FEATURES]: Extracting structural profiles from Set A pools...
+[2026-06-22 01:25:37] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (1757980, 4)
+[2026-06-22 01:25:48] [INFO] [combined_master_train_engine]: [FEATURES]: Extracting structural profiles from Set B pools...
+[2026-06-22 01:25:48] [INFO] [feature_engineering]: Initializing multi-phase extraction pipeline on matrix shape: (1762535, 4)
+[2026-06-22 01:25:59] [INFO] [combined_master_train_engine]: [REGISTRY]: Mapping independent outcome survival labels...
+[2026-06-22 01:25:59] [INFO] [data_pipeline]: Label alignment complete for set-a. Matched records cohort count: 4000
+[2026-06-22 01:25:59] [INFO] [data_pipeline]: Label alignment complete for set-b. Matched records cohort count: 4000
+[2026-06-22 01:25:59] [INFO] [combined_master_train_engine]: [REGISTRY]: Index matching validated. Wide matrix dimension: (8000, 118) across 8000 patients.
+[2026-06-22 01:25:59] [INFO] [combined_master_train_engine]: [MODELING STEP 1]: Fit 5-Fold Stratified LightGBM Estimators...
+[2026-06-22 01:25:59] [INFO] [evaluation_engine]: Starting 5-Fold Stratified Validation Loop.
+[2026-06-22 01:25:59] [INFO] [evaluation_engine]: Fold 1 -> AUPRC: 0.5350 | Event1: 0.5000
+[2026-06-22 01:26:00] [INFO] [evaluation_engine]: Fold 2 -> AUPRC: 0.4829 | Event1: 0.4660
+[2026-06-22 01:26:00] [INFO] [evaluation_engine]: Fold 3 -> AUPRC: 0.4428 | Event1: 0.4485
+[2026-06-22 01:26:00] [INFO] [evaluation_engine]: Fold 4 -> AUPRC: 0.5271 | Event1: 0.5026
+[2026-06-22 01:26:01] [INFO] [evaluation_engine]: Fold 5 -> AUPRC: 0.4880 | Event1: 0.4560
+[2026-06-22 01:26:01] [INFO] [evaluation_engine]: --- Cross-Validation Stability Card ---
+[2026-06-22 01:26:01] [INFO] [evaluation_engine]:  Fold Variance -> Met: AUROC              | Value: 0.8420 ± 0.0195
+[2026-06-22 01:26:01] [INFO] [evaluation_engine]:  Fold Variance -> Met: AUPRC              | Value: 0.4952 ± 0.0333
+[2026-06-22 01:26:01] [INFO] [evaluation_engine]:  Fold Variance -> Met: PhysioNet_Event1   | Value: 0.4746 ± 0.0225
+[2026-06-22 01:26:01] [INFO] [evaluation_engine]:  Fold Variance -> Met: PhysioNet_Event2   | Value: 33.4597 ± 9.3968
+[2026-06-22 01:26:02] [INFO] [combined_master_train_engine]: [MODELING STEP 2]: Training PyTorch Bidirectional LSTM on balanced cohorts...
+[2026-06-22 01:26:02] [INFO] [pytorch_dl_engine]: Initializing PyTorch execution training loops on device target: cpu
+[2026-06-22 01:26:02] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 1 / 5 ---
+[2026-06-22 01:28:46] [INFO] [pytorch_dl_engine]: Fold 1 Finalized. Peak Validation AUPRC: 0.4682
+[2026-06-22 01:28:47] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 2 / 5 ---
+[2026-06-22 01:32:53] [INFO] [pytorch_dl_engine]: Fold 2 Finalized. Peak Validation AUPRC: 0.3858
+[2026-06-22 01:32:54] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 3 / 5 ---
+[2026-06-22 01:34:01] [INFO] [pytorch_dl_engine]: Fold 3 Finalized. Peak Validation AUPRC: 0.3498
+[2026-06-22 01:34:01] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 4 / 5 ---
+[2026-06-22 01:37:19] [INFO] [pytorch_dl_engine]: Fold 4 Finalized. Peak Validation AUPRC: 0.4383
+[2026-06-22 01:37:19] [INFO] [pytorch_dl_engine]: --- PyTorch LSTM: Training Fold 5 / 5 ---
+[2026-06-22 01:40:06] [INFO] [pytorch_dl_engine]: Fold 5 Finalized. Peak Validation AUPRC: 0.4085
+[2026-06-22 01:40:06] [INFO] [combined_master_train_engine]: [EVALUATION]: Testing ensembled weights over the locked 15% validation holdout...
+[2026-06-22 01:40:06] [INFO] [combined_master_train_engine]: ==================================================
+[2026-06-22 01:40:06] [INFO] [combined_master_train_engine]:       UPGRADED MASTER HYBRID MODEL TEST SCORES     
+[2026-06-22 01:40:06] [INFO] [combined_master_train_engine]: ==================================================
+[2026-06-22 01:40:06] [INFO] [combined_master_train_engine]:  Combined Master Cohort AUROC:        0.8508
+[2026-06-22 01:40:06] [INFO] [combined_master_train_engine]:  Combined Master Cohort AUPRC:        0.4932
+[2026-06-22 01:40:06] [INFO] [combined_master_train_engine]:  Combined Master Cohort Event1:       0.5119
+[2026-06-22 01:40:06] [INFO] [combined_master_train_engine]:  Combined Master Cohort Brier Loss:   0.0920
+[2026-06-22 01:40:06] [INFO] [combined_master_train_engine]: ==================================================
+[2026-06-22 01:40:06] [INFO] [combined_master_train_engine]: [SERIALIZATION]: Packing optimized model dependencies to single compressed Joblib payload...
+[2026-06-22 01:40:06] [INFO] [utils_infra]: Successfully serialized production asset artifact to disk destination: D:\ML Project\ICU Project\models\hybrid_ensemble_core.joblib
+[2026-06-22 01:40:06] [INFO] [combined_master_train_engine]: ✨ Master training sequence completed perfectly. Elapsed Runtime: 0:14:29.961033
