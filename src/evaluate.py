@@ -115,15 +115,15 @@ def run_stratified_validation(X: pd.DataFrame, y: np.ndarray) -> Tuple[List[Cali
     trained_fold_models: List[CalibratedClassifierCV] = []
     fold_metrics: List[Dict[str, Any]] = []
     
-    # Safe isolation of feature columns (handles missing RecordId gracefully)
+    # FIXED: Keep X_pure as a pandas DataFrame to preserve feature names for LightGBM & SHAP
     feature_cols = [c for c in X.columns if c != 'RecordId']
-    X_pure = X[feature_cols].values
+    X_pure = X[feature_cols] 
     
     for fold, (train_idx, val_idx) in enumerate(skf.split(X_pure, y)):
-        X_train_fold, y_train_fold = X_pure[train_idx], y[train_idx]
-        X_val_fold, y_val_fold = X_pure[val_idx], y[val_idx]
+        X_train_fold, y_train_fold = X_pure.iloc[train_idx], y[train_idx]
+        X_val_fold, y_val_fold = X_pure.iloc[val_idx], y[val_idx]
         
-        # FIXED: Split training fold into distinct training and calibration subsets
+        # Split training fold into distinct training and calibration subsets
         X_tr, X_calib, y_tr, y_calib = train_test_split(
             X_train_fold, y_train_fold,
             test_size=0.15,
@@ -131,11 +131,11 @@ def run_stratified_validation(X: pd.DataFrame, y: np.ndarray) -> Tuple[List[Cali
             random_state=config.SEED
         )
         
-        # Fit underlying base estimator on primary training split
+        # Fit underlying base estimator on primary training split (DataFrame preservation keeps real names)
         base_model = lgb.LGBMClassifier(**config.LGBM_PARAMS)
         base_model.fit(X_tr, y_tr)
         
-        # FIXED: Fit calibration layer on the un-polluted calibration split using cv='prefit'
+        # Fit calibration layer on the un-polluted calibration split using cv='prefit'
         calibrated_model = CalibratedClassifierCV(estimator=base_model, method='sigmoid', cv='prefit')
         calibrated_model.fit(X_calib, y_calib)
         
@@ -155,6 +155,7 @@ def run_stratified_validation(X: pd.DataFrame, y: np.ndarray) -> Tuple[List[Cali
         
     overall_metrics = calculate_clinical_metrics(y, oof_predictions)
     return trained_fold_models, oof_predictions, overall_metrics
+
 
 def evaluate_ensemble(
     lgbm_probs: np.ndarray,
