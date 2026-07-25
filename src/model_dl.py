@@ -33,7 +33,7 @@ class ClinicalLSTM(nn.Module):
             nn.ReLU(),
             nn.Dropout(dropout),
             nn.Linear(32, 1),
-            
+            nn.Sigmoid()
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:

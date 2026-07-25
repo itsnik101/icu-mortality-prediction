@@ -87,13 +87,16 @@ def compile_raw_database(dataset_type: str = "set-a") -> pd.DataFrame:
     logger.info(f"✨ Successfully frozen compressed database snapshot cache at: {cache_path}")
     return master_long_df
 
+
 def attach_outcomes(features_df: pd.DataFrame, dataset_type: str = "set-a") -> pd.DataFrame:
     """Handshakes advanced extracted features with true mortality target indices."""
-    outcome_filename = "Outcomes-a.txt" if dataset_type == "set-a" else "Outcomes-b.txt"
+    # Dynamic suffix parser supporting set-a, set-b, set-c, etc.
+    dataset_code = dataset_type.replace("set-", "").strip().lower()
+    outcome_filename = f"Outcomes-{dataset_code}.txt"
     outcome_path = config.RAW_DATA_DIR / outcome_filename
     
     if not outcome_path.exists():
-        logger.error(f"Ground truth clinical label targets file missing at path: {outcome_path}")
+        logger.error(f"Ground truth clinical label target file missing at path: {outcome_path}")
         raise FileNotFoundError(f"Missing registry ledger file: {outcome_filename}")
         
     labels_df = pd.read_csv(outcome_path)
